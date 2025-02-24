@@ -9,7 +9,7 @@ public class AirportMapper {
 
         if(dto == null) {
             throw new NullPointerException(
-                    "The airport DTO should not be null!");
+                    "An airport DTO should not be null!");
         }
 
         var airport = new Airport();

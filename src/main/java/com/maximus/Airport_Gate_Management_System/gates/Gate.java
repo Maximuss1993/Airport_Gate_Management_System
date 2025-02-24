@@ -1,9 +1,8 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.maximus.Airport_Gate_Management_System.airports.Airport;
+import com.maximus.Airport_Gate_Management_System.flights.Flight;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "gates")
 public class Gate {
 
     @Id
@@ -19,5 +19,13 @@ public class Gate {
     private Integer id;
 
     private boolean available;
+
+    @OneToOne
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
+
+    @ManyToOne
+    @JoinColumn(name = "airport_id")
+    private Airport airport;
 
 }
