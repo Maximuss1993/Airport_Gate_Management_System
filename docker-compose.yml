@@ -1,21 +1,4 @@
 services:
-  app:
-    container_name: spring-boot-app
-    build: ../learning_platform_app
-    ports:
-      - "8181:8181"
-    networks:
-      - app-network
-    depends_on:
-      - db
-    environment:
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/app_db
-      - SPRING_DATASOURCE_USERNAME=username
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-
   db:
     container_name: db
     image: postgres:17
@@ -30,6 +13,22 @@ services:
     networks:
       - app-network
 
+  app:
+    container_name: spring-boot-app
+    image: maximuss1993/airport-gate-management-app
+    ports:
+      - "8181:8181"
+    networks:
+      - app-network
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/app_db
+      - SPRING_DATASOURCE_USERNAME=username
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 volumes:
   postgres:
 
