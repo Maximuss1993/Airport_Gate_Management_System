@@ -48,10 +48,10 @@ public class AirportController {
         return airportService.findByName(airportName);
     }
 
-    @DeleteMapping("/students/{student-id}")
+    @DeleteMapping("/airports/{airport-id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(
-            @PathVariable("student-id")
+            @PathVariable("airport-id")
             Integer id
     ) {
         airportService.deleteById(id);
