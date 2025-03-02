@@ -1,7 +1,9 @@
-# Server configuration
 server:
-  port: 8181 #set your port
+  port: 8181
 
+networks:
+  app-network:
+    driver: bridge
 
 #spring:
 #  profiles:
@@ -29,6 +31,3 @@ server:
 #  level:
 #    org.springframework: info
 #    org.hibernate: debug
-#networks:
-#  app-network:
-#    driver: bridge

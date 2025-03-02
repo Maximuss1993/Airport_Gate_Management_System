@@ -19,7 +19,7 @@ public class Airport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String name;
 
     @Column(length = 50, nullable = false)

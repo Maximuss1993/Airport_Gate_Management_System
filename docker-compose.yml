@@ -14,7 +14,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/app_db
       - SPRING_DATASOURCE_USERNAME=username
       - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
 
   db:
     container_name: db
