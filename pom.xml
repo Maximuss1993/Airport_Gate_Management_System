@@ -36,12 +36,6 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-docker-compose</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -79,8 +73,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<!-- Ako želite da specifično navedete glavnu klasu, koristite ovo -->
-<!--					<mainClass>com.maximus.AirportGateManagementSystem.AirportGateManagementSystemApplication</mainClass>-->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -97,7 +89,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>maximuss1993/airport-gate-management-app</image>
+						<image>airport-gate-management-app</image>
 					</to>
 					<container>
 						<ports>

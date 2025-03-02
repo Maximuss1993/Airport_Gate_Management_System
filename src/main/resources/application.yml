@@ -24,7 +24,11 @@
 #  level:
 #    org.springframework: info
 #    org.hibernate: debug
-
+#
 ## Server configuration
 #server:
 #  port: 8181 #set your port
+
+#networks:
+#  app-network:
+#    driver: bridge
