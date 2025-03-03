@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/airports")
 public class AirportController {
 
     private final AirportService airportService;
@@ -15,12 +16,12 @@ public class AirportController {
         this.airportService = airportService;
     }
 
-    @GetMapping("/airports")
+    @GetMapping()
     public List<AirportResponseDto> findAllAirports() {
         return airportService.findAllAirports();
     }
 
-    @PostMapping("/airports")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public AirportResponseDto saveAirport(
             @Valid
@@ -30,7 +31,7 @@ public class AirportController {
         return airportService.saveAirport(dto);
     }
 
-    @GetMapping("/airports/{airport-id}")
+    @GetMapping("/{airport-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public AirportResponseDto findById(
             @PathVariable("airport-id")
@@ -39,7 +40,7 @@ public class AirportController {
         return airportService.findById(id);
     }
 
-    @GetMapping("/airports/search/{airport-name}")
+    @GetMapping("/search/{airport-name}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AirportResponseDto> findAirportByName (
             @PathVariable("airport-name")
@@ -48,7 +49,7 @@ public class AirportController {
         return airportService.findByName(airportName);
     }
 
-    @DeleteMapping("/airports/{airport-id}")
+    @DeleteMapping("/{airport-id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(
             @PathVariable("airport-id")

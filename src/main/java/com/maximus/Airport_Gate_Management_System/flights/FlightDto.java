@@ -7,8 +7,8 @@ import java.time.LocalTime;
 
 public record FlightDto(
 
-        @NotEmpty(message = "Airline of the flight should not be empty.")
-        String airline,
+        @NotEmpty(message = "Flight number should not be empty.")
+        String flightNumber,
 
         @NotEmpty(message =
                 "Arriving date of the flight should not be empty.")

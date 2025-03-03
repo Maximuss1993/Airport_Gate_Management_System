@@ -18,10 +18,10 @@ public class Gate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private boolean available;
+    @Column(length = 50, nullable = false, unique = true)
+    private String name;
 
-    @OneToOne
-    @JoinColumn(name = "flight_id")
+    @OneToOne(mappedBy = "gate")
     private Flight flight;
 
     @ManyToOne

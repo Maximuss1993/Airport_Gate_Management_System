@@ -13,14 +13,14 @@ public class GateMapper {
         }
 
         var gate = new Gate();
-        gate.setAvailable(dto.available());
+        gate.setName(dto.name());
 
         return gate;
     }
 
     public GateResponseDto toGateResponseDto(Gate gate) {
         return new GateResponseDto(
-                gate.isAvailable()
+                gate.getName()
         );
     }
 }

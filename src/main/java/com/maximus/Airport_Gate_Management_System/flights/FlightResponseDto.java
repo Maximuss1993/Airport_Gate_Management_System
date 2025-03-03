@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public record FlightResponseDto(
 
-        String airline,
+        String flightNumber,
 
         LocalDate arrivingDate,
 

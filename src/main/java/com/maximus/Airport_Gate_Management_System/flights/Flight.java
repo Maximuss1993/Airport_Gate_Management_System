@@ -20,8 +20,8 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(length = 50, nullable = false)
-    private String airline;
+    @Column(length = 50, nullable = false, unique = true)
+    private String flightNumber;
 
     @Column(nullable = false)
     private LocalDate arrivingDate;

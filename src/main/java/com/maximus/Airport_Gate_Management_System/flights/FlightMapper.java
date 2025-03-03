@@ -13,7 +13,7 @@ public class FlightMapper {
         }
 
         var flight = new Flight();
-        flight.setAirline(dto.airline());
+        flight.setFlightNumber(dto.flightNumber());
         flight.setArrivingDate(dto.arrivingDate());
         flight.setArrivingTime(dto.arrivingTime());
 
@@ -22,7 +22,7 @@ public class FlightMapper {
 
     public FlightResponseDto toFlightResponseDto(Flight flight) {
         return new FlightResponseDto(
-                flight.getAirline(),
+                flight.getFlightNumber(),
                 flight.getArrivingDate(),
                 flight.getArrivingTime()
         );

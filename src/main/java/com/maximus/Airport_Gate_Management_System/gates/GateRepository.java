@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GateRepository extends JpaRepository<Gate, Integer> {
 
-    List<Gate> findAllByAvailable(boolean available);
+    List<Gate> findByFlightIsNull();
 
 }

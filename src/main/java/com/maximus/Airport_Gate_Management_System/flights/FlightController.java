@@ -1,6 +1,5 @@
 package com.maximus.Airport_Gate_Management_System.flights;
 
-import com.maximus.Airport_Gate_Management_System.airports.AirportResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/flights")
 public class FlightController {
 
     private final FlightService flightService;
@@ -17,12 +17,12 @@ public class FlightController {
         this.flightService = flightService;
     }
 
-    @GetMapping("/flights")
+    @GetMapping()
     public List<FlightResponseDto> findAllFlights() {
         return flightService.findAllFlights();
     }
 
-    @PostMapping("/flights")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public FlightResponseDto saveFlight(
             @Valid
@@ -32,7 +32,7 @@ public class FlightController {
         return flightService.saveFlight(dto);
     }
 
-    @GetMapping("/flights/{flight-id}")
+    @GetMapping("/{flight-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public FlightResponseDto findById(
             @PathVariable("flight-id")
@@ -41,7 +41,7 @@ public class FlightController {
         return flightService.findById(id);
     }
 
-    @GetMapping("/flight/search/{flight-date}")
+    @GetMapping("/search/{flight-date}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<FlightResponseDto> findFlightByDate (
             @PathVariable("flight-date")
@@ -50,7 +50,7 @@ public class FlightController {
         return flightService.findByArrivingDate(arrivalDate);
     }
 
-    @DeleteMapping("/flight/{flight-id}")
+    @DeleteMapping("/{flight-id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(
             @PathVariable("flight-id")
