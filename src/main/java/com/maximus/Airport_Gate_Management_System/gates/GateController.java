@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/gates")
 public class GateController {
 
@@ -26,7 +28,13 @@ public class GateController {
         if (success) {
             return ResponseEntity
                     .ok("Flight parked successfully.");
+
         } else {
+            log.info("Flight ID: {} is not successfully parked at the " +
+                            "gate ID: {} because it is already occupied.",
+                    flightId,
+                    gateId);
+
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Gate is already occupied.");

@@ -1,33 +1,6 @@
 server:
   port: 8181
 
-networks:
-  app-network:
-    driver: bridge
-
-#spring:
-#  profiles:
-#    active: development
-#  # Database
-#  datasource:
-#    url: jdbc:postgresql://db:5432/app_db
-#    username: username
-#    password: password
-#    driver-class-name: org.postgresql.Driver
-#  # JPA properties
-#  jpa:
-#    database: postgresql
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        format_sql: true
-#        enable_lazy_load_no_trans: true
-#    show-sql: true
-## Logger configuration
-#logging:
-#  pattern:
-#    console: "%d %-5level %logger : %msg%n"
-#  level:
-#    org.springframework: info
-#    org.hibernate: debug
+#networks:
+#  app-network:
+#    driver: bridge

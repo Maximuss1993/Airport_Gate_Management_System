@@ -1,11 +1,13 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AirportService {
 
     private final AirportRepository airportRepository;
@@ -23,6 +25,7 @@ public class AirportService {
 
         Airport airport = airportMapper.toAirport(dto);
         Airport savedAirport = airportRepository.save(airport);
+        log.info("Creating new airport with ID: {}.", airport.getId());
 
         return airportMapper.toAirportResponseDto(savedAirport);
     }
@@ -58,6 +61,7 @@ public class AirportService {
     }
 
     public void deleteById(Integer id) {
+        log.info("Deleting the airport with ID: {}.", id);
         airportRepository.deleteById(id);
     }
 }
