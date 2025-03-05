@@ -30,14 +30,14 @@ Before setting up the application, ensure you have the following installed:
 ### Cloning the Repository
 
 First, clone the repository from GitHub:
-> git clone https://github.com/Maximuss1993/Airport_Gate_Management_System.git
+> `git clone https://github.com/Maximuss1993/Airport_Gate_Management_System.git`
 
 Maven command for building app in local with Jib:
-> mvn compile jib:dockerBuild
+> `mvn compile jib:dockerBuild`
 
 Command for running local composed docker image:
-> docker-compose up
+> `docker-compose up`
 
 Command for removing composed docker image:
->docker-compose down
+>`docker-compose down`
 
