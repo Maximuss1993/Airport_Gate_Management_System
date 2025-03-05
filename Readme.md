@@ -14,10 +14,10 @@
 > administrators and other developers to follow and debug any issues.
 
 > Extra Challenge
-Update the solution so that certain gates are only available between certain times. If a
+*Update the solution so that certain gates are only available between certain times. If a
 request for a gate arrives to the REST service at a specific time, the service should check
 what gates are available at the current time as well as whether or not they are currently
-in use.
+in use.*
 Administrators should be able to update the times that gates are available at.
 
 ## Technical Information
