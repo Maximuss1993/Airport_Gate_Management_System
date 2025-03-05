@@ -26,20 +26,24 @@ public class GateService {
     }
 
     @Transactional
-    public synchronized boolean parkFlightOnGate(
+    public boolean parkFlightOnGate(
             Integer flightId, Integer gateId) {
 
         Gate gate = gateRepository.findById(gateId)
                 .orElseThrow(() -> new RuntimeException("Gate not found"));
 
         if (gate.getFlight() != null) {
-            log.warn("Gate named: {} is not available in the moment of attempt!",
-                    gate.getName());
+            log.debug("Gate ID: {} is not available!",
+                    gate.getId());
             return false;
         }
 
         Flight flight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
+                .orElseThrow(() -> {
+                    log.error("Flight with ID {} not found. " +
+                            "Throwing RuntimeException.", flightId);
+                    return new RuntimeException("Flight not found");
+                });
 
         flight.setGate(gate);
         gate.setFlight(flight);
@@ -47,21 +51,21 @@ public class GateService {
         flightRepository.save(flight);
         gateRepository.save(gate);
 
-        log.info("Flight number: {} was successfully assigned to gate {}.",
+        log.debug("Flight number: {} was successfully assigned to gate {}.",
                 flight.getFlightNumber(),
                 gate.getName());
 
         return true;
     }
 
-    public synchronized List<Gate> getAvailableGates() {
+    public List<Gate> getAvailableGates() {
         return gateRepository.findByFlightIsNull();
     }
 
     public GateResponseDto saveGate(GateDto dto) {
         Gate gate = gateMapper.toGate(dto);
         Gate savedGate = gateRepository.save(gate);
-        log.info("Creating new gate with ID: {}.", gate.getId());
+        log.trace("Creating new gate with ID: {}.", gate.getId());
 
         return gateMapper.toGateResponseDto(savedGate);
     }
@@ -81,7 +85,7 @@ public class GateService {
     }
 
     public void deleteById(Integer id) {
-        log.info("Deleting the gate with ID: {}.", id);
+        log.trace("Deleting the gate with ID: {}.", id);
         gateRepository.deleteById(id);
     }
 

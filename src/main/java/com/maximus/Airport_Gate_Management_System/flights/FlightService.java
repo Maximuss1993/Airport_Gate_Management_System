@@ -1,6 +1,5 @@
 package com.maximus.Airport_Gate_Management_System.flights;
 
-import com.maximus.Airport_Gate_Management_System.airports.AirportResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class FlightService {
 
         Flight flight = flightMapper.toFlight(dto);
         Flight savedFlight = flightRepository.save(flight);
-        log.info("Creating new flight with ID: {}.", flight.getId());
+        log.trace("Creating new flight with ID: {}.", flight.getId());
 
         return flightMapper.toFlightResponseDto(savedFlight);
     }
@@ -64,7 +63,7 @@ public class FlightService {
     }
 
     public void deleteById(Integer id) {
-        log.info("Deleting the flight with ID: {}.", id);
+        log.trace("Deleting the flight with ID: {}.", id);
         flightRepository.deleteById(id);
     }
 

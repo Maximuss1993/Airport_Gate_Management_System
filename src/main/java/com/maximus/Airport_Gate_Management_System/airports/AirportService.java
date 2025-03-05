@@ -25,7 +25,7 @@ public class AirportService {
 
         Airport airport = airportMapper.toAirport(dto);
         Airport savedAirport = airportRepository.save(airport);
-        log.info("Creating new airport with ID: {}.", airport.getId());
+        log.trace("Creating new airport with ID: {}.", airport.getId());
 
         return airportMapper.toAirportResponseDto(savedAirport);
     }
@@ -61,7 +61,7 @@ public class AirportService {
     }
 
     public void deleteById(Integer id) {
-        log.info("Deleting the airport with ID: {}.", id);
+        log.trace("Deleting the airport with ID: {}.", id);
         airportRepository.deleteById(id);
     }
 }
