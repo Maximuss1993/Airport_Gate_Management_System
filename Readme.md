@@ -57,4 +57,3 @@ Command for running local composed docker image:
 
 Command for removing composed docker image:
 > `docker-compose down`
-
