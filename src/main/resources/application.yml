@@ -1,6 +1,0 @@
-server:
-  port: 8181
-
-#networks:
-#  app-network:
-#    driver: bridge
