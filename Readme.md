@@ -1,6 +1,7 @@
 # **Airport Gate Management System**
 
 > **Description of the task:**
+> 
 > Create a REST service that manages available gates for planes to park at an airport. 
 > The REST service should accept a flight number and return the assigned gate. 
 > The service appropriate response should be returned from the REST service.
