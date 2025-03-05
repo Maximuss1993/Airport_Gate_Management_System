@@ -1,5 +1,6 @@
 Airport Gate Management System
-******************************
+##
+##
 
 ## Technical Information
 - **Framework**: Spring Boot 3
