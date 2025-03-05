@@ -17,16 +17,16 @@
 > Extra Challenge
 *Update the solution so that certain gates are only available between certain times. If a
 request for a gate arrives to the REST service at a specific time, the service should check
-what gates are available at the current time as well as whether or not they are currently
+what gates are available at the current time as well as whether they are currently
 in use.*
-Administrators should be able to update the times that gates are available at.
 
 ## Technical Information
 - **Framework**: Spring Boot 3
 - **JVM**: Java 17
 - **Database**: PostgreSQL
 - **Protocol**: REST API
-- **Authentication**: (if applicable) JWT, OAuth 2.0, Basic Authentication //??
+- **Authentication**: (if applicable) JWT, OAuth 2.0, Basic Authentication 
+//?? Da li ubaciti autentifikaciju?
 
 ## Features
 > List the key features of the application.
@@ -34,6 +34,7 @@ Administrators should be able to update the times that gates are available at.
 - Book flights with confirmation
 - View booking history
 - Admin panel for managing flights
+//PROVERI SVE!
 
 ## Installation and Setup
 
@@ -42,7 +43,6 @@ Administrators should be able to update the times that gates are available at.
 - Maven
 - Docker
 - Docker Compose
-- PostgreSQL (if not using Docker Compose)
 
 ### Cloning the Repository
 
