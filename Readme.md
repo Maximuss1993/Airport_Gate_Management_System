@@ -1,4 +1,4 @@
-## Airport Gate Management System
+Airport Gate Management System
 ******************************
 
 ## Technical Information
