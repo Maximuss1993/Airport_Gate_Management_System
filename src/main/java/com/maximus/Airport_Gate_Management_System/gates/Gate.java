@@ -25,7 +25,7 @@ public class Gate {
     private Flight flight;
 
     @ManyToOne
-    @JoinColumn(name = "airport_id")
+    @JoinColumn(name = "airport_id", nullable = false)
     private Airport airport;
 
 }
