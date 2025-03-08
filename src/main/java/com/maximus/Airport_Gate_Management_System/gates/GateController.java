@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,16 @@ public class GateController {
                     .body("Gate is already occupied.");
         }
         //dodaj vremensko ogranicenje
+    }
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public GateResponseDto saveGate(
+            @Valid
+            @RequestBody
+            GateDto dto
+    ) {
+        return gateService.saveGate(dto);
     }
 
     @GetMapping("/available")

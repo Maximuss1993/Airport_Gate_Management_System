@@ -53,7 +53,7 @@ public class GateService {
         flightRepository.save(flight);
         gateRepository.save(gate);
 
-        log.debug("Flight number: {} was successfully assigned to gate {}.",
+        log.debug("Flight number: {} was successfully assigned to the gate {}.",
                 flight.getFlightNumber(),
                 gate.getName());
 
@@ -62,7 +62,7 @@ public class GateService {
 
     public List<Gate> getAvailableGates() {
         return gateRepository.findByFlightIsNull();
-        //u pozivanoj funkciji doradi za vremensko ogranicenje
+        //u pozivanoj funkciji dodaj proveru vremena
     }
 
     public GateResponseDto saveGate(GateDto dto) {
