@@ -39,6 +39,7 @@ public class GateController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Gate is already occupied.");
         }
+        //dodaj vremensko ogranicenje
     }
 
     @GetMapping("/available")

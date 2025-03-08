@@ -38,6 +38,8 @@ public class GateService {
             return false;
         }
 
+        //dodaj vremensko ogranicenje
+
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> {
                     log.error("Flight with ID {} not found. " +
@@ -60,6 +62,7 @@ public class GateService {
 
     public List<Gate> getAvailableGates() {
         return gateRepository.findByFlightIsNull();
+        //u pozivanoj funkciji doradi za vremensko ogranicenje
     }
 
     public GateResponseDto saveGate(GateDto dto) {

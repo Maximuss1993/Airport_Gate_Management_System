@@ -3,6 +3,7 @@ package com.maximus.Airport_Gate_Management_System.flights;
 import com.maximus.Airport_Gate_Management_System.gates.Gate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "flights")
@@ -24,10 +26,16 @@ public class Flight {
     private String flightNumber;
 
     @Column(nullable = false)
-    private LocalDate arrivingDate;
+    private LocalTime arrivingTime;
+
+//    @Column(nullable = false)
+//    private LocalDate arrivingDate;
 
     @Column(nullable = false)
-    private LocalTime arrivingTime;
+    private LocalTime leavingTime;
+
+//    @Column(nullable = false)
+//    private LocalDate leavingDate;
 
     @OneToOne
     @JoinColumn(name = "gate_id")

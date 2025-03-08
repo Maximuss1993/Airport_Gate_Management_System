@@ -8,4 +8,5 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
 
     List<Gate> findByFlightIsNull();
 
+    //ovde dodaj da trazi za odredjeno vreme koji su slobodni (vremensko ogranicenje)
 }

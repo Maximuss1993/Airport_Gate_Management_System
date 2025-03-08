@@ -11,12 +11,12 @@ public record FlightDto(
         String flightNumber,
 
         @NotEmpty(message =
-                "Arriving date of the flight should not be empty.")
-        LocalDate arrivingDate,
+                "Arriving time of the flight should not be empty.")
+        LocalTime arrivingTime,
 
         @NotEmpty(message =
-                "Arriving time of the flight should not be empty.")
-        LocalTime arrivingTime
+                "Leaving time of the flight should not be empty.")
+                LocalTime leavingTime
 
 ) {
 }

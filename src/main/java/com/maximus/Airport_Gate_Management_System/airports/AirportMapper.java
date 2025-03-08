@@ -10,20 +10,22 @@ public class AirportMapper {
     public Airport toAirport(AirportDto dto) {
 
         if (dto == null) {
+
             log.error("The airport DTO is null. Throwing NullPointerException.");
+
             throw new NullPointerException("The airport DTO should not be null!");
         }
-        var airport = new Airport();
-        airport.setName(dto.name());
-        airport.setLocation(dto.location());
 
-        return  airport;
+        return  Airport.builder()
+                .name(dto.name())
+                .location(dto.location())
+                .build();
     }
 
     public AirportResponseDto toAirportResponseDto(Airport airport) {
-        return new AirportResponseDto(
-                airport.getName(),
-                airport.getLocation()
-        );
+        return AirportResponseDto.builder()
+                .name(airport.getName())
+                .location(airport.getLocation())
+                .build();
     }
 }
