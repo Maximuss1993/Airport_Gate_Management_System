@@ -16,8 +16,10 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
                 "and gate.closingTime >= :localTime) " +
             "or (gate.openingTime > gate.closingTime " +
                 "and (gate.openingTime <= :localTime " +
-                    "or gate.closingTime >= :localTime))")
+                    "or gate.closingTime >= :localTime)) " +
+            "and gate.flight is null")
     List<Gate> findAllAvailableGates(@Param("localTime") LocalTime localTime);
+
 
     @Modifying
     @Transactional
