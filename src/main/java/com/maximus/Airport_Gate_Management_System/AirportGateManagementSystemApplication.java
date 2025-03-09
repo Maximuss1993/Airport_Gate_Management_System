@@ -72,7 +72,6 @@ public class AirportGateManagementSystemApplication {
                 flight = Flight.builder()
 						.flightNumber(flNumber)
 						.arrivingTime(arrivingTime)
-						.leavingTime(arrivingTime.plusMinutes(30))
 						.build();
                 flightRepository.save(flight);
 			}

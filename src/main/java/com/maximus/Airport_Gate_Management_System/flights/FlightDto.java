@@ -12,11 +12,7 @@ public record FlightDto(
 
         @NotNull(message =
                 "Arriving time of the flight should not be null.")
-        LocalTime arrivingTime,
-
-        @NotNull(message =
-                "Leaving time of the flight should not be null.")
-        LocalTime leavingTime
+        LocalTime arrivingTime
 
 ) {
 }

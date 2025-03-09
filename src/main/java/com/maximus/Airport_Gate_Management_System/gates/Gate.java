@@ -32,7 +32,8 @@ public class Gate {
     @Column(nullable = false)
     private LocalTime closingTime;
 
-    @OneToOne(mappedBy = "gate")
+    @OneToOne
+    @JoinColumn(name = "flight_id")
     private Flight flight;
 
     @ManyToOne

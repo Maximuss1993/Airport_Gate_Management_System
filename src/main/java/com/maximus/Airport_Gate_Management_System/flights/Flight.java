@@ -27,9 +27,6 @@ public class Flight {
     @Column(nullable = false)
     private LocalTime arrivingTime;
 
-    @Column(nullable = false)
-    private LocalTime leavingTime;
-
     @OneToOne
     @JoinColumn(name = "gate_id")
     private Gate gate;

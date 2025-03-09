@@ -2,6 +2,8 @@ package com.maximus.Airport_Gate_Management_System.gates;
 
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
+import com.maximus.Airport_Gate_Management_System.customExceptions.FlightNotFoundException;
+import com.maximus.Airport_Gate_Management_System.customExceptions.GateNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -27,40 +29,46 @@ public class GateService {
         this.flightRepository = flightRepository;
     }
 
+    //DOBRO PROVERI I DODAJ JOS JEDNU F-JU da parkira na prvi slobodan gate
+
     @Transactional
-    public boolean parkFlightOnGate(
-            Integer flightId,
-            Integer gateId) {
+    public boolean parkFlightOnGate(Integer flightId, Integer gateId) {
+
         Gate gate = gateRepository.findById(gateId)
                 .orElseThrow(() -> {
-                    log.debug("Gate with ID {} not found. " +
-                            "Throwing RuntimeException.", gateId);
-                    return new RuntimeException("Gate not found");
+                    log.error("Gate with ID {} not found, " +
+                            "throwing GateNotFoundException.",
+                            gateId);
+                    return new GateNotFoundException("Gate with ID " +
+                            gateId + " not found");
                 });
+
         if (gate.getFlight() != null) {
-            log.trace("Gate ID: {} is occupied!",
+            log.debug("Gate ID: {} is occupied by another flight!",
                     gate.getId());
             return false;
         }
+
         if (!checkAvailabilityTime(gate)) {
-            log.trace("Gate ID: {} is not available at the moment because of" +
-                            "limited working time!",
+            log.debug("Gate ID: {} is not available due to " +
+                    "limited working time!",
                     gate.getId());
             return false;
         }
+
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> {
-                    log.debug("Flight with ID: {} not found. " +
-                            "Throwing RuntimeException.", flightId);
-                    return new RuntimeException("Flight not found");
+                    log.error("Flight with ID {} not found, throwing FlightNotFoundException.", flightId);
+                    return new FlightNotFoundException("Flight with ID " + flightId + " not found");
                 });
+
         flight.setGate(gate);
         gate.setFlight(flight);
+
         flightRepository.save(flight);
         gateRepository.save(gate);
-        log.trace("Flight number: {} was successfully assigned to the gate {}.",
-                flight.getFlightNumber(),
-                gate.getName());
+
+        log.info("Flight number: {} successfully assigned to gate: {}.", flight.getFlightNumber(), gate.getName());
         return true;
     }
 
@@ -122,13 +130,14 @@ public class GateService {
         var localTime = LocalTime.now();
         var openingTime = gate.getOpeningTime();
         var closingTime = gate.getClosingTime();
-        if (openingTime.isBefore(localTime) && closingTime.isAfter(localTime))
-            return true;
-        if (openingTime.isAfter(closingTime)) {
-            return openingTime.isBefore(localTime)
-                    | closingTime.isAfter(localTime);
+
+        if (openingTime.isBefore(closingTime)) {
+            return !localTime.isBefore(openingTime)
+                    && !localTime.isAfter(closingTime);
         }
-        return false;
+
+        return !localTime.isBefore(openingTime)
+                || !localTime.isAfter(closingTime);
     }
 
     public void updateOpeningTime(Integer gateId, LocalTime localTime) {
