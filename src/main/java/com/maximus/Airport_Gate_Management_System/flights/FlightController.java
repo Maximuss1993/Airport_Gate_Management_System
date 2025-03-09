@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,15 +38,6 @@ public class FlightController {
             int id
     ) {
         return flightService.findById(id);
-    }
-
-    @GetMapping("/search/{flight-date}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<FlightResponseDto> findFlightByDate (
-            @PathVariable("flight-date")
-            LocalDate arrivalDate
-    ) {
-        return flightService.findByArrivingDate(arrivalDate);
     }
 
     @DeleteMapping("/{flight-id}")

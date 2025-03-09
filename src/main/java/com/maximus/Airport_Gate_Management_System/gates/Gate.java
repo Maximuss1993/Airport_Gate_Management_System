@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.maximus.Airport_Gate_Management_System.airports.Airport;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import jakarta.persistence.*;
@@ -35,7 +36,8 @@ public class Gate {
     private Flight flight;
 
     @ManyToOne
-    @JoinColumn(name = "airport_id", nullable = false)
+    @JoinColumn(name = "airport_id")
+    @JsonBackReference
     private Airport airport;
 
 }

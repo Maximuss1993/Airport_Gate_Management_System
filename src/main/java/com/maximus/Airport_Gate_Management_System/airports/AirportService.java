@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,9 @@ public class AirportService {
     public AirportResponseDto findById(int id) {
         return airportRepository.findById(id)
                 .map(airportMapper::toAirportResponseDto)
-                .orElse(null);
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Airport not found with ID: "
+                                + id));
     }
 
     public List<AirportResponseDto> findByLocation (String location) {

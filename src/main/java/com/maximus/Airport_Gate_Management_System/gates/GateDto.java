@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
@@ -9,10 +10,10 @@ public record GateDto(
         @NotEmpty(message = "Name of the gate should not be empty.")
         String name,
 
-        @NotEmpty(message = "Opening time for the gate should not be empty.")
+        @NotNull(message = "Opening time for the gate should not be null.")
         LocalTime openingTime,
 
-        @NotEmpty(message = "Closing time for the gate should not be empty.")
+        @NotNull(message = "Closing time for the gate should not be null.")
         LocalTime closingTime
 ) {
 }

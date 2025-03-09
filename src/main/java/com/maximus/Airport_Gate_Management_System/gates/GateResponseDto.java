@@ -6,6 +6,7 @@ import java.time.LocalTime;
 
 @Builder
 public record GateResponseDto(
+
         String name,
 
         LocalTime openingTime,

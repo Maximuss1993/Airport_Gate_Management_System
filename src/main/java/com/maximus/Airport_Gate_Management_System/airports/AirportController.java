@@ -40,13 +40,22 @@ public class AirportController {
         return airportService.findById(id);
     }
 
-    @GetMapping("/search/{airport-name}")
+    @GetMapping("/search/name/{airport-name}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AirportResponseDto> findAirportByName (
             @PathVariable("airport-name")
             String airportName
     ) {
         return airportService.findByName(airportName);
+    }
+
+    @GetMapping("/search/location/{airport-location}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<AirportResponseDto> findAirportByLocation (
+            @PathVariable("airport-location")
+            String location
+    ) {
+        return airportService.findByLocation(location);
     }
 
     @DeleteMapping("/{airport-id}")

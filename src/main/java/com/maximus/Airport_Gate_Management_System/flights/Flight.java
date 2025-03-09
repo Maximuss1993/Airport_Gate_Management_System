@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -28,14 +27,8 @@ public class Flight {
     @Column(nullable = false)
     private LocalTime arrivingTime;
 
-//    @Column(nullable = false)
-//    private LocalDate arrivingDate;
-
     @Column(nullable = false)
     private LocalTime leavingTime;
-
-//    @Column(nullable = false)
-//    private LocalDate leavingDate;
 
     @OneToOne
     @JoinColumn(name = "gate_id")

@@ -10,8 +10,9 @@ import java.util.List;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
-    List<Flight> findAllByArrivingDate(LocalDate date);
+//    List<Flight> findAllByArrivingDate(LocalDate date);
 
     List<Flight> findAllByArrivingTime(LocalTime time);
 
+    boolean existsByFlightNumber(String flightNumber);
 }

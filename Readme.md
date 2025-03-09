@@ -26,6 +26,8 @@ as whether they are currently in use.
 - **JVM**: Java 17
 - **Database**: PostgreSQL
 - **Protocol**: REST API
+- **Containerization platform**: Docker
+- **Building Docker image tool**: Jib
 
 [//]: # (- **Authentication**: &#40;if applicable&#41; JWT, OAuth 2.0, Basic Authentication )
 

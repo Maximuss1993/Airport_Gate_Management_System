@@ -10,18 +10,15 @@ public class GateMapper {
     public Gate toGate(GateDto dto) {
 
         if (dto == null) {
-
             log.error("The gate DTO is null. " +
                     "Throwing NullPointerException.");
-
             throw new NullPointerException(
                     "The gate DTO should not be null!");
         }
-
         return Gate.builder()
                 .name(dto.name())
                 .openingTime(dto.openingTime())
-                .openingTime(dto.closingTime())
+                .closingTime(dto.closingTime())
                 .build();
     }
 

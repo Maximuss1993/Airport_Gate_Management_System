@@ -8,14 +8,10 @@ import org.springframework.stereotype.Service;
 public class AirportMapper {
 
     public Airport toAirport(AirportDto dto) {
-
         if (dto == null) {
-
             log.error("The airport DTO is null. Throwing NullPointerException.");
-
             throw new NullPointerException("The airport DTO should not be null!");
         }
-
         return  Airport.builder()
                 .name(dto.name())
                 .location(dto.location())

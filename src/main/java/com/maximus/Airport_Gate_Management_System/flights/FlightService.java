@@ -1,10 +1,9 @@
 package com.maximus.Airport_Gate_Management_System.flights;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,23 +42,9 @@ public class FlightService {
     public FlightResponseDto findById(int id) {
         return flightRepository.findById(id)
                 .map(flightMapper::toFlightResponseDto)
-                .orElse(null);
-    }
-
-    public List<FlightResponseDto> findByArrivingDate (LocalDate arrivingDate) {
-        return flightRepository
-                .findAllByArrivingDate(arrivingDate)
-                .stream()
-                .map(flightMapper::toFlightResponseDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<FlightResponseDto> findByArrivingTime(LocalTime arrivingTime) {
-        return flightRepository
-                .findAllByArrivingTime(arrivingTime)
-                .stream()
-                .map(flightMapper::toFlightResponseDto)
-                .collect(Collectors.toList());
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Flight not found with ID: "
+                                + id));
     }
 
     public void deleteById(Integer id) {

@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.maximus.Airport_Gate_Management_System.gates.Gate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,8 @@ public class Airport {
     @Column(length = 50, nullable = false)
     private String location;
 
-    @OneToMany(mappedBy = "airport")
+    @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Gate> gates;
 
 }
