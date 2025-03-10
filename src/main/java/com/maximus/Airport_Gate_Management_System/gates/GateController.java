@@ -119,4 +119,12 @@ public class GateController {
         gateService.updateClosingTime(id, localTime);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Gate> patchGate(
+            @PathVariable Integer id,
+            @RequestBody @Valid GateDto gateDto) {
+
+        Gate patchedGate = gateService.patchGate(id, gateDto);
+        return ResponseEntity.ok(patchedGate);
+    }
 }

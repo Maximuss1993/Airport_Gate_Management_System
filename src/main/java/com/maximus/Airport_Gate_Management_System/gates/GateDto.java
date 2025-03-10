@@ -10,10 +10,10 @@ public record GateDto(
         @NotEmpty(message = "Name of the gate should not be empty.")
         String name,
 
-        @NotNull(message = "Opening time for the gate should not be null.")
+//        @NotNull(message = "Opening time for the gate should not be null.")
         LocalTime openingTime,
 
-        @NotNull(message = "Closing time for the gate should not be null.")
+//        @NotNull(message = "Closing time for the gate should not be null.")
         LocalTime closingTime
 ) {
 }
