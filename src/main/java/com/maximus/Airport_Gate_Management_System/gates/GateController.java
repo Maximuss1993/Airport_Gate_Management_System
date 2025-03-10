@@ -21,7 +21,7 @@ public class GateController {
         this.gateService = gateService;
     }
 
-    @PostMapping("/park/{flightId}/{gateId}")
+    @PostMapping("/park/flight/{flightId}/gate/{gateId}")
     public ResponseEntity<String> parkFlightOnGate(
             @PathVariable Integer flightId,
             @PathVariable Integer gateId) {
@@ -101,24 +101,25 @@ public class GateController {
         gateService.deleteById(id);
     }
 
-    @PostMapping("update-opening/{id}/{local-time}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateGateOpeningTime(
-            @PathVariable("id") Integer id,
-            @PathVariable("local-time") LocalTime localTime
-    ) {
-        gateService.updateOpeningTime(id, localTime);
-    }
+//    @PostMapping("update-opening/{id}/{local-time}")
+//    @ResponseStatus(HttpStatus.ACCEPTED)
+//    public void updateGateOpeningTime(
+//            @PathVariable("id") Integer id,
+//            @PathVariable("local-time") LocalTime localTime
+//    ) {
+//        gateService.updateOpeningTime(id, localTime);
+//    }
+//
+//    @PostMapping("update-closing/{id}/{local-time}")
+//    @ResponseStatus(HttpStatus.ACCEPTED)
+//    public void updateGateClosingTime(
+//            @PathVariable("id") Integer id,
+//            @PathVariable("local-time") LocalTime localTime
+//    ) {
+//        gateService.updateClosingTime(id, localTime);
+//    }
 
-    @PostMapping("update-closing/{id}/{local-time}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateGateClosingTime(
-            @PathVariable("id") Integer id,
-            @PathVariable("local-time") LocalTime localTime
-    ) {
-        gateService.updateClosingTime(id, localTime);
-    }
-
+    //PREPRAVI DA IMAA PATCH DTO ZBOG VALIDATORA!!!
     @PatchMapping("/{id}")
     public ResponseEntity<Gate> patchGate(
             @PathVariable Integer id,

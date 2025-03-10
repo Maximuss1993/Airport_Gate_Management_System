@@ -21,18 +21,18 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
     List<Gate> findAllAvailableGates(@Param("localTime") LocalTime localTime);
 
 
-    @Modifying
-    @Transactional
-    @Query("update Gate gate " +
-            "set gate.openingTime = :localTime " +
-            "where gate.id = :id")
-    void updateGateOpeningTime(Integer id, LocalTime localTime);
-
-    @Modifying
-    @Transactional
-    @Query("update Gate gate " +
-            "set gate.closingTime = :localTime " +
-            "where gate.id = :id")
-    void updateGateClosingTime(Integer id, LocalTime localTime);
+//    @Modifying
+//    @Transactional
+//    @Query("update Gate gate " +
+//            "set gate.openingTime = :localTime " +
+//            "where gate.id = :id")
+//    void updateGateOpeningTime(Integer id, LocalTime localTime);
+//
+//    @Modifying
+//    @Transactional
+//    @Query("update Gate gate " +
+//            "set gate.closingTime = :localTime " +
+//            "where gate.id = :id")
+//    void updateGateClosingTime(Integer id, LocalTime localTime);
 
 }

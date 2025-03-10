@@ -93,7 +93,7 @@ public class GateService {
         Gate gate = gateRepository.findById(id).orElse(null);
         if (gate == null) {
             log.warn("Gate with ID: {} does not exist!", id);
-            throw new GateNotFoundException("Gate not found with ID: " + id);
+            throw new GateNotFoundException("Gate not found, ID: " + id);
         }
         gate = gateMapper.toGate(dto);
         gate.setId(id);
@@ -135,29 +135,29 @@ public class GateService {
                 || !localTime.isAfter(closingTime);
     }
 
-    public void updateOpeningTime(Integer gateId, LocalTime localTime) {
-        Gate gate = gateRepository.findById(gateId)
-                .orElseThrow(() -> {
-                    log.debug(
-                            "Gate ID: {} for updating opening time is not found." +
-                            "Throwing GateNotFoundException.",
-                            gateId);
-                    return new GateNotFoundException("Gate for updating not found");
-                });
-        gateRepository.updateGateOpeningTime(gate.getId(), localTime);
-    }
-
-    public void updateClosingTime(Integer gateId, LocalTime localTime) {
-        Gate gate = gateRepository.findById(gateId)
-                .orElseThrow(() -> {
-                    log.debug(
-                            "Gate ID: {} for updating closing time is not found." +
-                                    "Throwing GateNotFoundException.",
-                            gateId);
-                    return new GateNotFoundException("Gate for updating not found");
-                });
-        gateRepository.updateGateClosingTime(gate.getId(), localTime);
-    }
+//    public void updateOpeningTime(Integer gateId, LocalTime localTime) {
+//        Gate gate = gateRepository.findById(gateId)
+//                .orElseThrow(() -> {
+//                    log.debug(
+//                            "Gate ID: {} for updating opening time is not found." +
+//                            "Throwing GateNotFoundException.",
+//                            gateId);
+//                    return new GateNotFoundException("Gate for updating not found");
+//                });
+//        gateRepository.updateGateOpeningTime(gate.getId(), localTime);
+//    }
+//
+//    public void updateClosingTime(Integer gateId, LocalTime localTime) {
+//        Gate gate = gateRepository.findById(gateId)
+//                .orElseThrow(() -> {
+//                    log.debug(
+//                            "Gate ID: {} for updating closing time is not found." +
+//                                    "Throwing GateNotFoundException.",
+//                            gateId);
+//                    return new GateNotFoundException("Gate for updating not found");
+//                });
+//        gateRepository.updateGateClosingTime(gate.getId(), localTime);
+//    }
 
     public Gate patchGate(Integer id, GateDto gateDto) {
         Optional<Gate> gateOptional = gateRepository.findById(id);
