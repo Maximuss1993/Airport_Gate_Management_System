@@ -21,31 +21,9 @@ public class GateController {
         this.gateService = gateService;
     }
 
-    @PostMapping("/park/flight/{flightId}/gate/{gateId}")
-    public ResponseEntity<String> parkFlightOnGate(
-            @PathVariable Integer flightId,
-            @PathVariable Integer gateId) {
-        boolean success = gateService.parkFlightOnGate(flightId, gateId);
-        if (success) {
-            return ResponseEntity
-                    .ok("Flight parked successfully.");
-        } else {
-            log.trace("Flight ID: {} is not successfully parked " +
-                            "at the gate ID: {}.",
-                    flightId,
-                    gateId);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Gate is already occupied.");
-        }
-    }
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public GateResponseDto saveGate(
-            @Valid @RequestBody GateDto dto
-    ) {
-        return gateService.saveGate(dto);
+    @GetMapping()
+    public List<GateResponseDto> findAllGates() {
+        return gateService.findAllGates();
     }
 
     @GetMapping("/available")
@@ -62,18 +40,56 @@ public class GateController {
         if (localTime == null) {
             return ResponseEntity.badRequest().build();
         }
-
         List<Gate> availableGates = gateService.getAvailableGates(localTime);
         if (availableGates == null || availableGates.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(availableGates);
     }
 
-    @GetMapping()
-    public List<GateResponseDto> findAllGates() {
-        return gateService.findAllGates();
+    @PostMapping("/park/flight/{flight-id}/gate/{gate-id}")
+    public ResponseEntity<String> parkFlightOnGate(
+            @PathVariable("flight-id") Integer flightId,
+            @PathVariable("gate-id") Integer gateId) {
+        boolean success = gateService.parkFlightOnGate(flightId, gateId);
+        if (success) {
+            return ResponseEntity
+                    .ok("Flight parked successfully.");
+        } else {
+            log.trace("Flight ID: {} is not successfully parked " +
+                            "at the gate ID: {}.",
+                    flightId,
+                    gateId);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Gate is already occupied.");
+        }
+    }
+
+    @PostMapping("/park/flight/{flight-id}")
+    public ResponseEntity<String> parkFlightOnFirstAvailableGate(
+            @PathVariable("flight-id") Integer flightId) {
+
+        boolean success = gateService.parkFlightOnFirstAvailableGate(flightId);
+        if (success) {
+            return ResponseEntity
+                    .ok("Flight parked successfully.");
+        } else {
+            log.trace("Flight ID: {} is not successfully parked because " +
+                            "there is not any available gate.",
+                    flightId);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("All gates are already occupied.");
+        }
+    }
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public GateResponseDto saveGate(
+            @Valid @RequestBody GateDto dto
+    ) {
+        return gateService.saveGate(dto);
     }
 
     @GetMapping("/{gate-id}")
@@ -89,8 +105,15 @@ public class GateController {
     public GateResponseDto updateGate(
             @PathVariable("id") Integer id,
             @Valid @RequestBody GateDto gateDto) {
-
         return gateService.updateGate(id, gateDto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Gate> patchGate(
+            @PathVariable Integer id,
+            @RequestBody GateDto gateDto) {
+        Gate patchedGate = gateService.patchGate(id, gateDto);
+        return ResponseEntity.ok(patchedGate);
     }
 
     @DeleteMapping("/{gate-id}")
@@ -99,33 +122,5 @@ public class GateController {
             @PathVariable("gate-id") Integer id
     ) {
         gateService.deleteById(id);
-    }
-
-//    @PostMapping("update-opening/{id}/{local-time}")
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public void updateGateOpeningTime(
-//            @PathVariable("id") Integer id,
-//            @PathVariable("local-time") LocalTime localTime
-//    ) {
-//        gateService.updateOpeningTime(id, localTime);
-//    }
-//
-//    @PostMapping("update-closing/{id}/{local-time}")
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public void updateGateClosingTime(
-//            @PathVariable("id") Integer id,
-//            @PathVariable("local-time") LocalTime localTime
-//    ) {
-//        gateService.updateClosingTime(id, localTime);
-//    }
-
-    //PREPRAVI DA IMAA PATCH DTO ZBOG VALIDATORA!!!
-    @PatchMapping("/{id}")
-    public ResponseEntity<Gate> patchGate(
-            @PathVariable Integer id,
-            @RequestBody @Valid GateDto gateDto) {
-
-        Gate patchedGate = gateService.patchGate(id, gateDto);
-        return ResponseEntity.ok(patchedGate);
     }
 }
