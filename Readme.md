@@ -28,18 +28,21 @@ as whether they are currently in use.
 - **Protocol**: REST API
 - **Containerization platform**: Docker
 - **Building Docker image tool**: Jib
+- **API tool**: Swagger
 
-[//]: # (- **Authentication**: &#40;if applicable&#41; JWT, OAuth 2.0, Basic Authentication )
+[//]: # (**Authentication**: &#40;if applicable&#41; &#41;)
+[//]: # (JWT, OAuth 2.0, Basic Authentication &#41;)
 
 ## Features
-> List the key features of the application. 
 - Three models are implemented in the application:
 1. Airport,
 2. Flight and
 3. Gate.
-- For all entities you can CREATE, UPDATE, DELETE or SEARCH by different 
+
+>For all entities you can CREATE, UPDATE, DELETE or SEARCH by different 
 parameters.
-- The main function for accepting a flight number and returning the assigned 
+
+>The main function for accepting a flight number and returning the assigned 
 gate is in the **GateController** class.
 
 ## Package by Feature
@@ -82,5 +85,20 @@ Maven command for building app in local with Jib:
 Command for running composed docker image in local (on Docker Daemon):
 > `docker-compose up`
 
-Command for removing composed docker image:
+The **Swagger UI** page will then be available at
+- http://server:port/context-path/swagger-ui.html
+
+and the OpenAPI description will be available at the following
+- url for json format: http://server:port/context-path/v3/api-docs
+
+> - server: The server name or IP
+> - port: The server port
+> - context-path: The context path of the application
+
+You can change port in the application.properties file.
+
+Default port in this application is 8181:
+> `http://localhost:8181/swagger-ui/index.html`
+
+On the end you can use the fallowing command to delete all docker images:
 > `docker-compose down`

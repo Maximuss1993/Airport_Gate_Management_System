@@ -39,7 +39,7 @@ public class AirportService {
                 .collect(Collectors.toList());
     }
 
-    public AirportResponseDto findById(int id) {
+    public AirportResponseDto findById(Integer id) {
         return airportRepository.findById(id)
                 .map(airportMapper::toAirportResponseDto)
                 .orElseThrow(() ->

@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class GateService {
-
     private final GateRepository gateRepository;
+
     private final GateMapper gateMapper;
     private final FlightRepository flightRepository;
 
@@ -114,18 +114,6 @@ public class GateService {
         gateRepository.deleteById(id);
     }
 
-    private boolean checkAvailabilityTime(Gate gate) {
-        var localTime = LocalTime.now();
-        var openingTime = gate.getOpeningTime();
-        var closingTime = gate.getClosingTime();
-        if (openingTime.isBefore(closingTime)) {
-            return !localTime.isBefore(openingTime)
-                    && !localTime.isAfter(closingTime);
-        }
-        return !localTime.isBefore(openingTime)
-                || !localTime.isAfter(closingTime);
-    }
-
     public Gate patchGate(Integer gateId, GateDto dto) {
         Gate gate = getGate(gateId);
         if (dto.name() != null) {
@@ -140,15 +128,16 @@ public class GateService {
         return gateRepository.save(gate);
     }
 
-    private void parkFlightOnGateAndSave(Integer flightId, Gate gate) {
-        Flight flight = getFlight(flightId);
-        flight.setGate(gate);
-        gate.setFlight(flight);
-        flightRepository.save(flight);
-        gateRepository.save(gate);
-
-        log.trace("Flight number: {} successfully assigned to gate: {}.",
-                flight.getFlightNumber(), gate.getName());
+    private boolean checkAvailabilityTime(Gate gate) {
+        var localTime = LocalTime.now();
+        var openingTime = gate.getOpeningTime();
+        var closingTime = gate.getClosingTime();
+        if (openingTime.isBefore(closingTime)) {
+            return !localTime.isBefore(openingTime)
+                    && !localTime.isAfter(closingTime);
+        }
+        return !localTime.isBefore(openingTime)
+                || !localTime.isAfter(closingTime);
     }
 
     private Flight getFlight(Integer flightId) {
@@ -171,6 +160,17 @@ public class GateService {
                     return new GateNotFoundException("Gate not found, ID:"
                             + gateId);
                 });
+    }
+
+    private void parkFlightOnGateAndSave(Integer flightId, Gate gate) {
+        Flight flight = getFlight(flightId);
+        flight.setGate(gate);
+        gate.setFlight(flight);
+        flightRepository.save(flight);
+        gateRepository.save(gate);
+
+        log.trace("Flight number: {} successfully assigned to gate: {}.",
+                flight.getFlightNumber(), gate.getName());
     }
 
 }
