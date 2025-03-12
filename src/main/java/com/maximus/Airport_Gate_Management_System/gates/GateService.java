@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,32 +35,21 @@ public class GateService {
     public boolean parkFlightOnGate(Integer flightId, Integer gateId) {
         Gate gate = getGate(gateId);
         if (gate.getFlight() != null) {
-            log.debug("Gate ID: {} is occupied by another flight!", gateId);
+            log.debug("Gate ID: {} is occupied!", gateId);
             return false;
         }
         if (!checkAvailabilityTime(gate)) {
             log.debug("Gate ID: {} currently is not available.", gateId);
             return false;
         }
-        Flight flight = getFlight(flightId);
-        flight.setGate(gate);
-        gate.setFlight(flight);
-        flightRepository.save(flight);
-        gateRepository.save(gate);
-
-        log.trace("Flight number: {} successfully assigned to gate: {}.",
-                flight.getFlightNumber()
-                , gate.getName());
+        parkFlightOnGateAndSave(flightId, gate);
         return true;
     }
 
     @Transactional
     public boolean parkFlightOnFirstAvailableGate(Integer flightId) {
-
         var currentTime = LocalTime.now();
-
         Pageable pageable = PageRequest.of(0, 1);
-
         Page<Gate> gatePage = gateRepository
                 .findFirstAvailableGate(currentTime, pageable);
 
@@ -70,43 +58,10 @@ public class GateService {
                     "throwing GateNotFoundException.", currentTime);
             throw new GateNotFoundException("Available gate not found");
         }
-
         Gate foundGate = gatePage.getContent().get(0);
-
-        Flight flight = getFlight(flightId);
-
-        flight.setGate(foundGate);
-        foundGate.setFlight(flight);
-
-        flightRepository.save(flight);
-        gateRepository.save(foundGate);
-
-        log.info("Flight number: {} successfully assigned to gate: {}.",
-                flight.getFlightNumber(), foundGate.getName());
+        parkFlightOnGateAndSave(flightId, foundGate);
 
         return true;
-    }
-
-    private Flight getFlight(Integer flightId) {
-        return flightRepository.findById(flightId)
-                .orElseThrow(() -> {
-                    log.error("Flight with ID {} not found, " +
-                                    "throwing FlightNotFoundException.",
-                            flightId);
-                    return new FlightNotFoundException("Gate not found, ID:"
-                            + flightId);
-                });
-    }
-
-    private Gate getGate(Integer gateId) {
-        return gateRepository.findById(gateId)
-                .orElseThrow(() -> {
-                    log.error("Gate with ID {} not found, " +
-                                    "throwing GateNotFoundException.",
-                            gateId);
-                    return new GateNotFoundException("Gate not found, ID:"
-                            + gateId);
-                });
     }
 
     public List<Gate> getAvailableGates() {
@@ -171,12 +126,8 @@ public class GateService {
                 || !localTime.isAfter(closingTime);
     }
 
-    public Gate patchGate(Integer id, GateDto dto) {
-        Optional<Gate> gateOptional = gateRepository.findById(id);
-        if (gateOptional.isEmpty()) {
-            throw new GateNotFoundException("Gate with id" + id + "not found");
-        }
-        Gate gate = gateOptional.get();
+    public Gate patchGate(Integer gateId, GateDto dto) {
+        Gate gate = getGate(gateId);
         if (dto.name() != null) {
             gate.setName(dto.name());
         }
@@ -187,6 +138,39 @@ public class GateService {
             gate.setClosingTime(dto.closingTime());
         }
         return gateRepository.save(gate);
+    }
+
+    private void parkFlightOnGateAndSave(Integer flightId, Gate gate) {
+        Flight flight = getFlight(flightId);
+        flight.setGate(gate);
+        gate.setFlight(flight);
+        flightRepository.save(flight);
+        gateRepository.save(gate);
+
+        log.trace("Flight number: {} successfully assigned to gate: {}.",
+                flight.getFlightNumber(), gate.getName());
+    }
+
+    private Flight getFlight(Integer flightId) {
+        return flightRepository.findById(flightId)
+                .orElseThrow(() -> {
+                    log.error("Flight with ID {} not found, " +
+                                    "throwing FlightNotFoundException.",
+                            flightId);
+                    return new FlightNotFoundException("Gate not found, ID:"
+                            + flightId);
+                });
+    }
+
+    private Gate getGate(Integer gateId) {
+        return gateRepository.findById(gateId)
+                .orElseThrow(() -> {
+                    log.error("Gate with ID {} not found, " +
+                                    "throwing GateNotFoundException.",
+                            gateId);
+                    return new GateNotFoundException("Gate not found, ID:"
+                            + gateId);
+                });
     }
 
 }
