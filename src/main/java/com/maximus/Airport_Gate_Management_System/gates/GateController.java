@@ -1,5 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,6 +36,7 @@ public class GateController {
 
     @GetMapping("/available/{time}")
     public ResponseEntity<List<Gate>> getAvailableGates(
+            @Parameter(description = "Set time for checking free gates.")
             @PathVariable("time")
             @DateTimeFormat(pattern = "HH:mm") LocalTime localTime
     ) {
@@ -47,9 +50,12 @@ public class GateController {
         return ResponseEntity.ok(availableGates);
     }
 
+    @Operation(summary = "Parking flight on specific gate with provided ID.")
     @PostMapping("/park/flight/{flight-id}/gate/{gate-id}")
     public ResponseEntity<String> parkFlightOnGate(
+            @Parameter(description = "Set flight id for parking.")
             @PathVariable("flight-id") Integer flightId,
+            @Parameter(description = "Set available gate id for parking.")
             @PathVariable("gate-id") Integer gateId) {
         boolean success = gateService.parkFlightOnGate(flightId, gateId);
         if (success) {
@@ -66,6 +72,7 @@ public class GateController {
         }
     }
 
+    @Operation(summary = "Parking flight on first available gate.")
     @PostMapping("/park/flight/{flight-id}")
     public ResponseEntity<String> parkFlightOnFirstAvailableGate(
             @PathVariable("flight-id") Integer flightId) {
