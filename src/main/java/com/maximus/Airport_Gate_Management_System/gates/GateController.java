@@ -24,6 +24,7 @@ public class GateController {
     }
 
     @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
     public List<GateResponseDto> findAllGates() {
         return gateService.findAllGates();
     }
@@ -40,13 +41,14 @@ public class GateController {
             @PathVariable("time")
             @DateTimeFormat(pattern = "HH:mm") LocalTime localTime
     ) {
-        if (localTime == null) {
+        if (localTime == null)
             return ResponseEntity.badRequest().build();
-        }
+
         List<Gate> availableGates = gateService.getAvailableGates(localTime);
-        if (availableGates == null || availableGates.isEmpty()) {
+
+        if (availableGates == null || availableGates.isEmpty())
             return ResponseEntity.notFound().build();
-        }
+
         return ResponseEntity.ok(availableGates);
     }
 
@@ -59,13 +61,10 @@ public class GateController {
             @PathVariable("gate-id") Integer gateId) {
         boolean success = gateService.parkFlightOnGate(flightId, gateId);
         if (success) {
-            return ResponseEntity
-                    .ok("Flight parked successfully.");
+            return ResponseEntity.ok("Flight parked successfully.");
         } else {
             log.trace("Flight ID: {} is not successfully parked " +
-                            "at the gate ID: {}.",
-                    flightId,
-                    gateId);
+                            "at the gate ID: {}.", flightId, gateId);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Gate is already occupied.");
@@ -79,8 +78,7 @@ public class GateController {
 
         boolean success = gateService.parkFlightOnFirstAvailableGate(flightId);
         if (success) {
-            return ResponseEntity
-                    .ok("Flight parked successfully.");
+            return ResponseEntity.ok("Flight parked successfully.");
         } else {
             log.trace("Flight ID: {} is not successfully parked because " +
                             "there is not any available gate.",

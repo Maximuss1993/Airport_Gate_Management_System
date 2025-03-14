@@ -43,7 +43,7 @@ public class AirportService {
         return airportRepository.findById(id)
                 .map(airportMapper::toAirportResponseDto)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Airport not found with ID: "
+                        new EntityNotFoundException("Airport not found, ID: "
                                 + id));
     }
 

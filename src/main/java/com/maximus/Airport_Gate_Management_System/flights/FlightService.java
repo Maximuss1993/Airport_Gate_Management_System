@@ -43,12 +43,12 @@ public class FlightService {
         return flightRepository.findById(id)
                 .map(flightMapper::toFlightResponseDto)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Flight not found with ID: "
+                        new EntityNotFoundException("Flight not found, ID: "
                                 + id));
     }
 
     public void deleteById(Integer id) {
-        log.trace("Deleting the flight with ID: {}.", id);
+        log.trace("Deleting the flight, ID: {}.", id);
         flightRepository.deleteById(id);
     }
 

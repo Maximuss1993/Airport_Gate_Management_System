@@ -29,4 +29,13 @@ public class GateMapper {
                 .closingTime(gate.getClosingTime())
                 .build();
     }
+
+    public void updateGateFromDto(GateDto dto, Gate gate) {
+        if (dto.name() != null)
+            gate.setName(dto.name());
+        if (dto.openingTime() != null)
+            gate.setOpeningTime(dto.openingTime());
+        if (dto.closingTime() != null)
+            gate.setClosingTime(dto.closingTime());
+    }
 }
