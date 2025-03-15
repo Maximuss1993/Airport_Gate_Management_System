@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
-import com.maximus.Airport_Gate_Management_System.exceptions.ApiRequestException;
+import com.maximus.Airport_Gate_Management_System.exceptions.GateOccupiedBaseException;
+import com.maximus.Airport_Gate_Management_System.exceptions.GateUnavailableTimeBaseException;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -122,13 +123,13 @@ public class GateService {
             String message = "Gate with ID: " + gate.getId()
                     + " is already occupied!";
             log.warn(message);
-            throw new ApiRequestException(message);
+            throw new GateOccupiedBaseException(message);
         }
         if (!checkAvailabilityTime(gate)) {
             String message = "Gate with ID: " + gate.getId()
                     + " is currently unavailable!";
             log.warn(message);
-            throw new ApiRequestException(message);
+            throw new GateUnavailableTimeBaseException(message);
         }
     }
 
