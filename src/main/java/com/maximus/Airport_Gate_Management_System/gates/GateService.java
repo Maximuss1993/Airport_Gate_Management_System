@@ -1,7 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
-import com.maximus.Airport_Gate_Management_System.exceptions.GateOccupiedBaseException;
-import com.maximus.Airport_Gate_Management_System.exceptions.GateUnavailableTimeBaseException;
+import com.maximus.Airport_Gate_Management_System.exceptions.GateOccupiedException;
+import com.maximus.Airport_Gate_Management_System.exceptions.GateUnavailableTimeException;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,7 +48,7 @@ public class GateService {
         Gate foundGate = getFirstAvailableGate(currentTime);
         parkFlightOnGateAndSave(flightId, foundGate);
         log.info("Flight with ID: {} successfully parked at the first available " +
-                        "gate with ID: {}.", flightId, foundGate.getId());
+                        "gate (ID: {}).", flightId, foundGate.getId());
         return true;
     }
 
@@ -120,16 +120,12 @@ public class GateService {
 
     private void checkGateAvailability(Gate gate) {
         if (gate.getFlight() != null) {
-            String message = "Gate with ID: " + gate.getId()
-                    + " is already occupied!";
-            log.warn(message);
-            throw new GateOccupiedBaseException(message);
+            throw new GateOccupiedException("Gate with ID: "
+                    + gate.getId() + " is already occupied!");
         }
         if (!checkAvailabilityTime(gate)) {
-            String message = "Gate with ID: " + gate.getId()
-                    + " is currently unavailable!";
-            log.warn(message);
-            throw new GateUnavailableTimeBaseException(message);
+            throw new GateUnavailableTimeException("Gate with ID: "
+                    + gate.getId() + " is currently unavailable!");
         }
     }
 

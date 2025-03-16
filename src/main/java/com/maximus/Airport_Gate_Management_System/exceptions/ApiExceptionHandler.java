@@ -15,6 +15,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {ApiRequestBaseException.class})
     public ResponseEntity<Object> handleException(ApiRequestBaseException e) {
+
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
 
         log.error("Exception occurred: {}. Details: {}",
@@ -36,4 +37,3 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, badRequest);
     }
 }
-
