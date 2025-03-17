@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class GateServiceTest {
@@ -110,27 +111,40 @@ class GateServiceTest {
 
         Gate gate = Gate.builder()
                 .name("TestGate")
-                .openingTime(LocalTime.of(1,0))
-                .closingTime(LocalTime.of(2,0))
+                .openingTime(LocalTime.of(1, 0))
+                .closingTime(LocalTime.of(2, 0))
                 .build();
 
         when(gateMapper.toGateResponseDto(any(Gate.class)))
                 .thenReturn(new GateResponseDto(
                         "TestGate",
-                        LocalTime.of(1,0),
-                        LocalTime.of(2,0))
-                );
+                        LocalTime.of(1, 0),
+                        LocalTime.of(2, 0)
+                ));
+
         when(gateRepository.findById(gateId)).thenReturn(Optional.of(gate));
 
-        GateResponseDto responseDto = gateService.findById(gateId);
+        Optional<GateResponseDto> responseDto = gateService.findById(gateId);
 
-        assertEquals(gate.getName(), responseDto.name());
-        assertEquals(gate.getOpeningTime(), responseDto.openingTime());
-        assertEquals(gate.getClosingTime(), responseDto.closingTime());
-
+        assertTrue(responseDto.isPresent(),
+                "Gate response should be present");
+        assertEquals(gate.getName(), responseDto.get().name());
+        assertEquals(gate.getOpeningTime(), responseDto.get().openingTime());
+        assertEquals(gate.getClosingTime(), responseDto.get().closingTime());
         verify(gateRepository, times(1))
                 .findById(gateId);
-
     }
+
+    @Test
+    public void should_throw_exception_if_gate_not_found() {
+        Integer gateId = 1;
+
+        when(gateRepository.findById(gateId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> gateService.findById(gateId));
+    }
+
 
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,12 +87,11 @@ public class GateService {
                 .collect(Collectors.toList());
     }
 
-    //da li da vraca Optional?
-    public GateResponseDto findById(Integer id) {
-        return gateRepository.findById(id)
+    public Optional<GateResponseDto> findById(Integer id) {
+        return Optional.ofNullable(gateRepository.findById(id)
                 .map(gateMapper::toGateResponseDto)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Gate not found, ID: " + id));
+                        "Gate not found, ID: " + id)));
     }
 
     public void deleteById(Integer id) {

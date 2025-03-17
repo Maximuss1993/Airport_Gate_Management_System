@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -99,7 +100,7 @@ public class GateController {
 
     @GetMapping("/{gate-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public GateResponseDto findById(
+    public Optional<GateResponseDto> findById(
             @PathVariable("gate-id") Integer id
     ) {
         return gateService.findById(id);
