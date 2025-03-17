@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class GateService {
+
     private final GateRepository gateRepository;
 
     private final GateMapper gateMapper;
@@ -30,6 +31,12 @@ public class GateService {
         this.gateRepository = gateRepository;
         this.gateMapper = gateMapper;
         this.flightRepository = flightRepository;
+    }
+
+    public GateResponseDto saveGate(GateDto dto) {
+        Gate gate = gateMapper.toGate(dto);
+        Gate savedGate = gateRepository.save(gate);
+        return gateMapper.toGateResponseDto(savedGate);
     }
 
     @Transactional
@@ -60,12 +67,6 @@ public class GateService {
         return gateRepository.findAllAvailableGates(localTime);
     }
 
-    public GateResponseDto saveGate(GateDto dto) {
-        Gate gate = gateMapper.toGate(dto);
-        Gate savedGate = gateRepository.save(gate);
-        return gateMapper.toGateResponseDto(savedGate);
-    }
-
     public GateResponseDto updateGate(Integer id, GateDto dto) {
         Gate gate = gateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -85,6 +86,7 @@ public class GateService {
                 .collect(Collectors.toList());
     }
 
+    //da li da vraca Optional?
     public GateResponseDto findById(Integer id) {
         return gateRepository.findById(id)
                 .map(gateMapper::toGateResponseDto)

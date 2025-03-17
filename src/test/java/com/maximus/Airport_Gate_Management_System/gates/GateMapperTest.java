@@ -17,7 +17,7 @@ class GateMapperTest {
     }
 
     @Test
-    public void shouldMapGateDtoToGate() {
+    public void should_map_gate_dto_to_gate() {
          GateDto dto = new GateDto(
                  "TestGateDto",
                  LocalTime.of(1,0),
@@ -30,7 +30,7 @@ class GateMapperTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenDtoIsNull() {
+    public void should_throw_null_pointer_exception_when_dto_is_null() {
         NullPointerException exception = assertThrows(
                 NullPointerException.class,
                 () ->  mapper.toGate(null),
@@ -41,7 +41,7 @@ class GateMapperTest {
     }
 
     @Test
-    public void shouldMapGateToGateResponseDto() {
+    public void should_map_gate_to_gate_response_dto() {
         Gate gate = Gate.builder()
                 .name("TestGate")
                 .openingTime(LocalTime.of(1,0))
@@ -55,7 +55,7 @@ class GateMapperTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenGateIsNull() {
+    public void should_throw_null_pointer_exception_when_gate_is_null() {
         var exception = assertThrows(NullPointerException.class,
                 () ->  mapper.toGateResponseDto(null),
                 "Should throw NullPointerException."
@@ -65,7 +65,7 @@ class GateMapperTest {
     }
 
     @Test
-    public void shouldUpdateGateFromDto() {
+    public void should_update_gate_from_dto() {
         var oldOpeningTime = LocalTime.of(1,0);
         var oldClosingTime = LocalTime.of(2, 0);
         var newOpeningTime = LocalTime.of(12,0);
