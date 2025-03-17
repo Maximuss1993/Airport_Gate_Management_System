@@ -21,6 +21,13 @@ public class FlightMapper {
     }
 
     public FlightResponseDto toFlightResponseDto(Flight flight) {
+
+        if (flight == null) {
+            log.error("The flight is null. Throwing NullPointerException.");
+            throw new NullPointerException(
+                    "The flight should not be null!");
+        }
+
         return FlightResponseDto.builder()
                 .flightNumber(flight.getFlightNumber())
                 .arrivingTime(flight.getArrivingTime())

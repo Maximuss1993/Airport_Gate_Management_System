@@ -19,6 +19,13 @@ public class AirportMapper {
     }
 
     public AirportResponseDto toAirportResponseDto(Airport airport) {
+
+        if (airport == null) {
+            log.error("The airport is null. Throwing NullPointerException.");
+            throw new NullPointerException(
+                    "The airport should not be null!");
+        }
+
         return AirportResponseDto.builder()
                 .name(airport.getName())
                 .location(airport.getLocation())
