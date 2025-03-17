@@ -23,6 +23,9 @@ public class GateMapper {
     }
 
     public GateResponseDto toGateResponseDto(Gate gate) {
+
+        //gate is null?
+
         return GateResponseDto.builder()
                 .name(gate.getName())
                 .openingTime(gate.getOpeningTime())
