@@ -40,43 +40,12 @@ public class GateService {
         return gateMapper.toGateResponseDto(savedGate);
     }
 
-    @Transactional
-    public boolean parkFlightOnGate(Integer flightId, Integer gateId) {
-        Gate gate = getGate(gateId);
-        checkGateAvailability(gate);
-        parkFlightOnGateAndSave(flightId, gate);
-        log.info("Flight with ID: {} successfully parked at Gate with ID: {}",
-                flightId, gateId);
-        return true;
-    }
-
-    @Transactional
-    public boolean parkFlightOnFirstAvailableGate(Integer flightId) {
-        var currentTime = LocalTime.now();
-        Gate foundGate = getFirstAvailableGate(currentTime);
-        parkFlightOnGateAndSave(flightId, foundGate);
-        log.info("Flight with ID: {} successfully parked at the first available " +
-                        "gate (ID: {}).", flightId, foundGate.getId());
-        return true;
-    }
-
-    public List<Gate> getAvailableGates() {
-        return gateRepository.findAllAvailableGates(LocalTime.now());
-    }
-
-    public List<Gate> getAvailableGates(LocalTime localTime) {
-        return gateRepository.findAllAvailableGates(localTime);
-    }
-
-    public GateResponseDto updateGate(Integer id, GateDto dto) {
-        Gate gate = gateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Gate not found, ID: " + id));
-        gateMapper.updateGateFromDto(dto, gate);
-        Gate updatedGate = gateRepository.save(gate);
-        log.debug("Gate with ID: {} has been successfully updated.",
-                updatedGate.getId());
-        return gateMapper.toGateResponseDto(updatedGate);
+    public List<GateResponseDto> getAvailableGates(LocalTime localTime) {
+        return gateRepository
+                .findAllAvailableGates(localTime)
+                .stream()
+                .map(gateMapper::toGateResponseDto)
+                .collect(Collectors.toList());
     }
 
     public List<GateResponseDto> findAllGates() {
@@ -98,6 +67,17 @@ public class GateService {
         gateRepository.deleteById(id);
     }
 
+    public GateResponseDto updateGate(Integer id, GateDto dto) {
+        Gate gate = gateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Gate not found, ID: " + id));
+        gateMapper.updateGateFromDto(dto, gate);
+        Gate updatedGate = gateRepository.save(gate);
+        log.debug("Gate with ID: {} has been successfully updated.",
+                updatedGate.getId());
+        return gateMapper.toGateResponseDto(updatedGate);
+    }
+
     public Gate patchGate(Integer gateId, GateDto dto) {
         Gate gate = getGate(gateId);
         if (dto.name() != null)
@@ -107,6 +87,55 @@ public class GateService {
         if (dto.closingTime() != null)
             gate.setClosingTime(dto.closingTime());
         return gateRepository.save(gate);
+    }
+
+    @Transactional
+    public boolean parkFlightOnGate(Integer flightId, Integer gateId) {
+        Gate gate = getGate(gateId);
+        checkGateAvailability(gate);
+        parkFlightOnGateAndSave(flightId, gate);
+        log.info("Flight with ID: {} successfully parked at Gate with ID: {}",
+                flightId, gateId);
+        return true;
+    }
+
+    @Transactional
+    public boolean parkFlightOnFirstAvailableGate(Integer flightId) {
+        var currentTime = LocalTime.now();
+        Gate foundGate = getFirstAvailableGate(currentTime);
+        parkFlightOnGateAndSave(flightId, foundGate);
+        log.info("Flight with ID: {} successfully parked at the first available " +
+                "gate (ID: {}).", flightId, foundGate.getId());
+        return true;
+    }
+
+    @Transactional
+    public boolean parkOutFlightFromGate(Integer gateId) {
+        if (isGateFree(gateId)) {
+            log.info("Gate ID: {} is already free. No action required.", gateId);
+            return true;
+        }
+        Gate foundGate = getGate(gateId);
+        if (foundGate.getFlight() == null) {
+            log.warn("Gate ID: {} does not have an associated flight.", gateId);
+            return false;
+        }
+        var flightId = foundGate.getFlight().getId();
+        try {
+            gateRepository.parkOutFlightFromGate(gateId);
+            log.info("Flight ID: {} successfully parked out from gate ID: {}.",
+                    flightId, gateId);
+            return true;
+        } catch (Exception e) {
+            log.error("Error while parking out flight from gate ID: {}. " +
+                    "Error: {}", gateId, e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isGateFree(Integer gateId) {
+        Gate foundGate = getGate(gateId);
+        return foundGate.getFlight() != null;
     }
 
     private boolean checkAvailabilityTime(Gate gate) {

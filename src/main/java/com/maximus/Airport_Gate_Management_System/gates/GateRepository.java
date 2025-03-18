@@ -1,8 +1,10 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -31,5 +33,10 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
     Page<Gate> findFirstAvailableGate(
             @Param("localTime") LocalTime localTime,
             Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("update Gate gate set gate.flight = null where gate.id = :gateId")
+    void parkOutFlightFromGate(Integer gateId);
 
 }

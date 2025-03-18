@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,5 +147,58 @@ class GateServiceTest {
                 () -> gateService.findById(gateId));
     }
 
+    @Test
+    public void should_return_all_available_gates_in_target_time() {
+        LocalTime testOpeningTime = LocalTime.of(1, 0);
+        LocalTime testClosingTime = LocalTime.of(3, 0);
+
+        Gate gate1 = Gate.builder()
+                .name("TestGate1")
+                .openingTime(testOpeningTime)
+                .closingTime(testClosingTime)
+                .build();
+
+        Gate gate2 = Gate.builder()
+                .name("TestGate2")
+                .openingTime(testOpeningTime)
+                .closingTime(testClosingTime)
+                .build();
+
+        List<Gate> gates = Arrays.asList(gate1, gate2);
+
+        var targetTime = LocalTime.of(2, 0);
+
+        when(gateRepository.findAllAvailableGates(targetTime)).thenReturn(gates);
+
+        when(gateMapper.toGateResponseDto(any(Gate.class)))
+                .thenAnswer(invocation -> {
+                    Gate gate = invocation.getArgument(0);
+                    return new GateResponseDto(
+                            gate.getName(),
+                            gate.getOpeningTime(),
+                            gate.getClosingTime());
+                });
+
+        List<GateResponseDto> responseDtos = gateService
+                .getAvailableGates(targetTime);
+
+        assertEquals(gates.size(), responseDtos.size(),
+                "The number of available gates should match.");
+
+        assertEquals("TestGate1", responseDtos.get(0).name());
+        assertEquals(testOpeningTime,
+                responseDtos.get(0).openingTime());
+        assertEquals(testClosingTime,
+                responseDtos.get(0).closingTime());
+
+        assertEquals("TestGate2", responseDtos.get(1).name());
+        assertEquals(testOpeningTime,
+                responseDtos.get(1).openingTime());
+        assertEquals(testClosingTime,
+                responseDtos.get(1).closingTime());
+
+        verify(gateRepository, times(1))
+                .findAllAvailableGates(targetTime);
+    }
 
 }

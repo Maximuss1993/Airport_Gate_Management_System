@@ -31,13 +31,14 @@ public class GateController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<Gate>> getAvailableGates() {
-        List<Gate> availableGates = gateService.getAvailableGates();
+    public ResponseEntity<List<GateResponseDto>> getAvailableGates() {
+        List<GateResponseDto> availableGates = gateService
+                .getAvailableGates(LocalTime.now());
         return ResponseEntity.ok(availableGates);
     }
 
     @GetMapping("/available/{time}")
-    public ResponseEntity<List<Gate>> getAvailableGates(
+    public ResponseEntity<List<GateResponseDto>> getAvailableGates(
             @Parameter(description = "Set time for checking free gates.")
             @PathVariable("time")
             @DateTimeFormat(pattern = "HH:mm") LocalTime localTime
@@ -45,7 +46,7 @@ public class GateController {
         if (localTime == null)
             return ResponseEntity.badRequest().build();
 
-        List<Gate> availableGates = gateService.getAvailableGates(localTime);
+        List<GateResponseDto> availableGates = gateService.getAvailableGates(localTime);
 
         if (availableGates == null || availableGates.isEmpty())
             return ResponseEntity.notFound().build();
@@ -96,6 +97,31 @@ public class GateController {
             @Valid @RequestBody GateDto dto
     ) {
         return gateService.saveGate(dto);
+    }
+
+    @Operation(summary = "Parking out flight from the gate.")
+    @PostMapping("/park/out/gate/{gate-id}")
+    public ResponseEntity<String> parkOutFlightFromGate(
+            @PathVariable("gate-id") Integer gateId) {
+
+        if (gateService.isGateFree(gateId)) {
+            return ResponseEntity.ok(
+                    String.format("Gate ID:%d is already free!", gateId));
+        }
+
+        boolean success = gateService.parkOutFlightFromGate(gateId);
+        if (success) {
+            return ResponseEntity.ok(
+                    String.format("Flight parked out successfully from gate " +
+                            "ID:%d.", gateId));
+        } else {
+            log.warn("Something went wrong with parking out from gate ID: {}.",
+                    gateId);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(String.format("Failed to park out flight from gate " +
+                            "ID:%d. Please try again.", gateId));
+        }
     }
 
     @GetMapping("/{gate-id}")
