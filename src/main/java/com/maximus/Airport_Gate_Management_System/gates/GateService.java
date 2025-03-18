@@ -6,6 +6,7 @@ import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +33,7 @@ public class GateService {
         this.flightRepository = flightRepository;
     }
 
-    public GateResponseDto saveGate(GateDto gateDto) {
+    public GateResponseDto saveGate(@Valid GateDto gateDto) {
         Gate gate = gateMapper.toGate(gateDto);
         Gate savedGate = gateRepository.save(gate);
         return gateMapper.toGateResponseDto(savedGate);
@@ -65,17 +66,21 @@ public class GateService {
         gateRepository.deleteById(id);
     }
 
-    public GateResponseDto updateGate(Integer id, GateDto gateDto) {
+    @Transactional
+    public GateResponseDto updateGate(Integer id, @Valid GateDto dto) {
         Gate gate = getGate(id);
-        gate = gateMapper.toGate(gateDto);
-        Gate updatedGate = gateRepository.save(gate);
-        log.debug("Gate with ID: {} has been successfully updated.",
-                updatedGate.getId());
-        return gateMapper.toGateResponseDto(updatedGate);
+        gateMapper.updateGateFromDto(dto, gate);
+        gateRepository.save(gate);
+        return gateMapper.toGateResponseDto(gate);
     }
 
-    public Gate patchGate(Integer gateId, GateDto dto) {
-        Gate gate = getGate(gateId);
+    @Transactional
+    public Gate patchGate(Integer id, GateDto dto) {
+        if (dto == null) {
+            log.error("GateDto is null for patch operation.");
+            throw new IllegalArgumentException("GateDto cannot be null");
+        }
+        Gate gate = getGate(id);
         if (dto.name() != null)
             gate.setName(dto.name());
         if (dto.openingTime() != null)

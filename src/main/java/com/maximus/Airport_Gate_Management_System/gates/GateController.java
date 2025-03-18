@@ -45,12 +45,9 @@ public class GateController {
     ) {
         if (localTime == null)
             return ResponseEntity.badRequest().build();
-
         List<GateResponseDto> availableGates = gateService.getAvailableGates(localTime);
-
         if (availableGates == null || availableGates.isEmpty())
             return ResponseEntity.notFound().build();
-
         return ResponseEntity.ok(availableGates);
     }
 
@@ -108,7 +105,6 @@ public class GateController {
             return ResponseEntity.ok(
                     String.format("Gate ID:%d is already free!", gateId));
         }
-
         boolean success = gateService.parkOutFlightFromGate(gateId);
         if (success) {
             return ResponseEntity.ok(
