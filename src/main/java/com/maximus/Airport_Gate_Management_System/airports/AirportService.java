@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
+import com.maximus.Airport_Gate_Management_System.gates.GateMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,11 @@ import java.util.stream.Collectors;
 public class AirportService {
 
     private final AirportRepository airportRepository;
-    private final AirportMapper airportMapper;
+    private final AirportMapper airportMapper = AirportMapper.INSTANCE;
 
     public AirportService(
-            AirportRepository airportRepository,
-            AirportMapper airportMapper) {
-
+            AirportRepository airportRepository) {
         this.airportRepository = airportRepository;
-        this.airportMapper = airportMapper;
     }
 
     public AirportResponseDto saveAirport(AirportDto dto) {

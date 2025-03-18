@@ -12,14 +12,11 @@ import java.util.stream.Collectors;
 public class FlightService {
 
     private final FlightRepository flightRepository;
-    private final FlightMapper flightMapper;
+    private final FlightMapper flightMapper = FlightMapper.INSTANCE;
 
     public FlightService(
-            FlightRepository flightRepository,
-            FlightMapper flightMapper) {
-
+            FlightRepository flightRepository) {
         this.flightRepository = flightRepository;
-        this.flightMapper = flightMapper;
     }
 
     public FlightResponseDto saveFlight(FlightDto dto) {

@@ -22,20 +22,18 @@ import java.util.stream.Collectors;
 public class GateService {
 
     private final GateRepository gateRepository;
-
-    private final GateMapper gateMapper;
     private final FlightRepository flightRepository;
 
+    private final GateMapper gateMapper = GateMapper.INSTANCE;
+
     public GateService(GateRepository gateRepository,
-                       GateMapper gateMapper,
                        FlightRepository flightRepository) {
         this.gateRepository = gateRepository;
-        this.gateMapper = gateMapper;
         this.flightRepository = flightRepository;
     }
 
-    public GateResponseDto saveGate(GateDto dto) {
-        Gate gate = gateMapper.toGate(dto);
+    public GateResponseDto saveGate(GateDto gateDto) {
+        Gate gate = gateMapper.toGate(gateDto);
         Gate savedGate = gateRepository.save(gate);
         return gateMapper.toGateResponseDto(savedGate);
     }
@@ -67,11 +65,9 @@ public class GateService {
         gateRepository.deleteById(id);
     }
 
-    public GateResponseDto updateGate(Integer id, GateDto dto) {
-        Gate gate = gateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Gate not found, ID: " + id));
-        gateMapper.updateGateFromDto(dto, gate);
+    public GateResponseDto updateGate(Integer id, GateDto gateDto) {
+        Gate gate = getGate(id);
+        gate = gateMapper.toGate(gateDto);
         Gate updatedGate = gateRepository.save(gate);
         log.debug("Gate with ID: {} has been successfully updated.",
                 updatedGate.getId());
@@ -135,7 +131,7 @@ public class GateService {
 
     public boolean isGateFree(Integer gateId) {
         Gate foundGate = getGate(gateId);
-        return foundGate.getFlight() != null;
+        return (foundGate.getFlight() != null);
     }
 
     private boolean checkAvailabilityTime(Gate gate) {
@@ -143,10 +139,10 @@ public class GateService {
         var openingTime = gate.getOpeningTime();
         var closingTime = gate.getClosingTime();
         if (openingTime.isBefore(closingTime))
-            return !localTime.isBefore(openingTime)
-                    && !localTime.isAfter(closingTime);
-        return !localTime.isBefore(openingTime)
-                || !localTime.isAfter(closingTime);
+            return ( !localTime.isBefore(openingTime)
+                    && !localTime.isAfter(closingTime) );
+        return ( !localTime.isBefore(openingTime)
+                || !localTime.isAfter(closingTime) );
     }
 
     private void checkGateAvailability(Gate gate) {

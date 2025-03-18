@@ -1,34 +1,20 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-@Slf4j
-@Service
-public class AirportMapper {
+@Mapper
+public interface AirportMapper {
 
-    public Airport toAirport(AirportDto dto) {
-        if (dto == null) {
-            log.error("The airport DTO is null. Throwing NullPointerException.");
-            throw new NullPointerException("The airport DTO should not be null!");
-        }
-        return  Airport.builder()
-                .name(dto.name())
-                .location(dto.location())
-                .build();
-    }
+    AirportMapper INSTANCE = Mappers.getMapper(AirportMapper.class);
 
-    public AirportResponseDto toAirportResponseDto(Airport airport) {
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "location", target = "location")
+    Airport toAirport(AirportDto dto);
 
-        if (airport == null) {
-            log.error("The airport is null. Throwing NullPointerException.");
-            throw new NullPointerException(
-                    "The airport should not be null!");
-        }
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "location", target = "location")
+    AirportResponseDto toAirportResponseDto(Airport airport);
 
-        return AirportResponseDto.builder()
-                .name(airport.getName())
-                .location(airport.getLocation())
-                .build();
-    }
 }

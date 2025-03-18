@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import lombok.Builder;
 
 import java.time.LocalTime;
@@ -11,6 +12,9 @@ public record GateResponseDto(
 
         LocalTime openingTime,
 
-        LocalTime closingTime
+        LocalTime closingTime,
+
+        Flight flight
+
 ) {
 }

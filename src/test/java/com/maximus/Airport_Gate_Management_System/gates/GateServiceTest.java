@@ -26,7 +26,7 @@ class GateServiceTest {
     private GateRepository gateRepository;
 
     @Mock
-    private GateMapper gateMapper;
+    private GateMapper gateMapper = GateMapper.INSTANCE;
 
     @Mock
     private FlightRepository flightRepository;
@@ -59,10 +59,11 @@ class GateServiceTest {
         when(gateMapper.toGate(dto)).thenReturn(gate);
         when(gateRepository.save(gate)).thenReturn(savedGate);
         when(gateMapper.toGateResponseDto(savedGate))
-                .thenReturn(new GateResponseDto(
-                        "TestGate",
-                        LocalTime.of(1,0),
-                        LocalTime.of(2,0)));
+                .thenReturn(GateResponseDto.builder()
+                        .name("TestGate")
+                        .openingTime(LocalTime.of(1,0))
+                        .closingTime(LocalTime.of(2,0))
+                        .build());
 
         GateResponseDto responseDto = gateService.saveGate(dto);
 
@@ -70,10 +71,7 @@ class GateServiceTest {
         assertEquals(dto.openingTime(), responseDto.openingTime());
         assertEquals(dto.closingTime(), responseDto.closingTime());
 
-        verify(gateMapper, times(1)).toGate(dto);
         verify(gateRepository, times(1)).save(gate);
-        verify(gateMapper, times(1))
-                .toGateResponseDto(savedGate);
     }
 
     @Test
@@ -93,11 +91,14 @@ class GateServiceTest {
 
         when(gateRepository.findAll()).thenReturn(gates);
         when(gateMapper.toGateResponseDto(any(Gate.class)))
-                .thenReturn(new GateResponseDto(
-                        "TestGate",
-                        LocalTime.of(1,0),
-                        LocalTime.of(2,0))
-                );
+                .thenAnswer(invocation -> {
+                    Gate gate = invocation.getArgument(0);
+                    return GateResponseDto.builder()
+                            .name(gate.getName())
+                            .openingTime(gate.getOpeningTime())
+                            .closingTime(gate.getClosingTime())
+                            .build();
+                });
 
         List<GateResponseDto> responseDtos = gateService.findAllGates();
 
@@ -117,11 +118,11 @@ class GateServiceTest {
                 .build();
 
         when(gateMapper.toGateResponseDto(any(Gate.class)))
-                .thenReturn(new GateResponseDto(
-                        "TestGate",
-                        LocalTime.of(1, 0),
-                        LocalTime.of(2, 0)
-                ));
+                .thenReturn(GateResponseDto.builder()
+                        .name("TestGate")
+                        .openingTime(LocalTime.of(1,0))
+                        .closingTime(LocalTime.of(2,0))
+                        .build());
 
         when(gateRepository.findById(gateId)).thenReturn(Optional.of(gate));
 
@@ -130,8 +131,10 @@ class GateServiceTest {
         assertTrue(responseDto.isPresent(),
                 "Gate response should be present");
         assertEquals(gate.getName(), responseDto.get().name());
-        assertEquals(gate.getOpeningTime(), responseDto.get().openingTime());
-        assertEquals(gate.getClosingTime(), responseDto.get().closingTime());
+        assertEquals(gate.getOpeningTime(), responseDto.get()
+                .openingTime());
+        assertEquals(gate.getClosingTime(), responseDto.get()
+                .closingTime());
         verify(gateRepository, times(1))
                 .findById(gateId);
     }
@@ -168,15 +171,17 @@ class GateServiceTest {
 
         var targetTime = LocalTime.of(2, 0);
 
-        when(gateRepository.findAllAvailableGates(targetTime)).thenReturn(gates);
+        when(gateRepository.findAllAvailableGates(targetTime))
+                .thenReturn(gates);
 
         when(gateMapper.toGateResponseDto(any(Gate.class)))
                 .thenAnswer(invocation -> {
                     Gate gate = invocation.getArgument(0);
-                    return new GateResponseDto(
-                            gate.getName(),
-                            gate.getOpeningTime(),
-                            gate.getClosingTime());
+                    return GateResponseDto.builder()
+                            .name(gate.getName())
+                            .openingTime(gate.getOpeningTime())
+                            .closingTime(gate.getClosingTime())
+                            .build();
                 });
 
         List<GateResponseDto> responseDtos = gateService
@@ -185,13 +190,15 @@ class GateServiceTest {
         assertEquals(gates.size(), responseDtos.size(),
                 "The number of available gates should match.");
 
-        assertEquals("TestGate1", responseDtos.get(0).name());
+        assertEquals("TestGate1", responseDtos.get(0)
+                .name());
         assertEquals(testOpeningTime,
                 responseDtos.get(0).openingTime());
         assertEquals(testClosingTime,
                 responseDtos.get(0).closingTime());
 
-        assertEquals("TestGate2", responseDtos.get(1).name());
+        assertEquals("TestGate2", responseDtos.get(1)
+                .name());
         assertEquals(testOpeningTime,
                 responseDtos.get(1).openingTime());
         assertEquals(testClosingTime,
