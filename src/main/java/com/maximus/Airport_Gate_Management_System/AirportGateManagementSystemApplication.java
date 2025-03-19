@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalTime;
 
@@ -21,6 +22,7 @@ public class AirportGateManagementSystemApplication {
 		SpringApplication.run(AirportGateManagementSystemApplication.class, args);
 	}
 
+	@Profile("!test")
 	@Bean
 	public CommandLineRunner commandLineRunner(
 			AirportRepository airportRepository,
@@ -29,14 +31,17 @@ public class AirportGateManagementSystemApplication {
 	) {
 		return args -> {
 
+			int NUM_OF_GATES = 20;
+			int NUM_OF_FLIGHTS = 30;
+
 			Airport airport;
-            airport = Airport.builder()
+			airport = Airport.builder()
 					.name("Nikola Tesla")
 					.location("Belgrade")
 					.build();
-            airportRepository.save(airport);
+			airportRepository.save(airport);
 
-			for (int i = 1; i <= 15; i++) {
+			for (int i = 1; i <= NUM_OF_GATES; i++) {
 				Faker faker = new Faker();
 
 				var oHours = faker.number().numberBetween(0, 24);
@@ -57,7 +62,7 @@ public class AirportGateManagementSystemApplication {
                 gateRepository.save(gate);
 			}
 
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= NUM_OF_FLIGHTS; i++) {
 				Faker faker = new Faker();
 				var aHours = faker.number().numberBetween(0, 24);
 				var aMinutes = faker.number().numberBetween(0, 59);
