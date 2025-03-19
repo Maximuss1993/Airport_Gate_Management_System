@@ -1,5 +1,8 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.maximus.Airport_Gate_Management_System.flights.Flight;
+import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +25,9 @@ class GateRepositoryTest {
 
     @Autowired
     private GateRepository gateRepository;
+
+    @Autowired
+    private FlightRepository flightRepository;
 
     @BeforeEach
     public void setUp() {
@@ -136,5 +143,60 @@ class GateRepositoryTest {
         Gate firstAvailableGate = gatePage.getContent().get(0);
         assertNotNull(firstAvailableGate);
     }
+
+    @Test
+    public void should_delete_gate() {
+
+        Gate gate = Gate.builder()
+                .name("TestGate1")
+                .openingTime(LocalTime.of(1, 0))
+                .closingTime(LocalTime.of(3, 0))
+                .build();
+
+        gateRepository.save(gate);
+        gateRepository.deleteById(gate.getId());
+        Optional<Gate> returnedGate = gateRepository.findById(gate.getId());
+
+        assertTrue(returnedGate.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    public void testParkOutFlightFromGate() {
+        Flight flight = Flight.builder()
+                .flightNumber("F#123")
+                .arrivingTime(LocalTime.of(1, 0))
+                .build();
+        flightRepository.save(flight);
+        flightRepository.flush();
+
+        Gate gate = Gate.builder()
+                .name("TestGate1")
+                .openingTime(LocalTime.of(1, 0))
+                .closingTime(LocalTime.of(3, 0))
+                .flight(flight)
+                .build();
+        gateRepository.save(gate);
+        gateRepository.flush();
+
+        var gateId = gate.getId();
+
+        Gate savedGate = gateRepository.findById(gateId).orElseThrow();
+        assertEquals(savedGate.getFlight(), flight);
+
+        gateRepository.parkOutFlightFromGate(gateId);
+        gateRepository.flush();
+
+        Gate updatedGate = gateRepository.findById(gateId).orElseThrow();
+
+        assertNull(updatedGate.getFlight(),
+                "Flight should be null after parkOutFlightFromGate");
+
+        Flight updatedFlight = flightRepository
+                .findById(flight.getId()).orElseThrow();
+        assertNull(updatedFlight.getGate(),
+                "Flight's gate should be null after parkOut");
+    }
+
 
 }

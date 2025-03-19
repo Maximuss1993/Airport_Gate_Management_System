@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.maximus.Airport_Gate_Management_System.airports.Airport;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,6 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "gates")
 public class Gate {
 
     @Id
@@ -33,7 +31,7 @@ public class Gate {
     @Column(nullable = false)
     private LocalTime closingTime;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "flight_id")
     private Flight flight;
 

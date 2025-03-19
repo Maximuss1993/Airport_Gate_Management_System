@@ -110,22 +110,13 @@ public class GateService {
         return true;
     }
 
+    //proveri ovo dobro!
     @Transactional
     public boolean parkOutFlightFromGate(Integer gateId) {
-        if (isGateFree(gateId)) {
-            log.info("Gate ID: {} is already free. No action required.", gateId);
-            return true;
-        }
-        Gate foundGate = getGate(gateId);
-        if (foundGate.getFlight() == null) {
-            log.warn("Gate ID: {} does not have an associated flight.", gateId);
-            return false;
-        }
-        var flightId = foundGate.getFlight().getId();
         try {
             gateRepository.parkOutFlightFromGate(gateId);
-            log.info("Flight ID: {} successfully parked out from gate ID: {}.",
-                    flightId, gateId);
+            log.info("Successfully parked out the flight from gate ID: {}",
+                    gateId);
             return true;
         } catch (Exception e) {
             log.error("Error while parking out flight from gate ID: {}. " +
@@ -133,6 +124,7 @@ public class GateService {
             return false;
         }
     }
+
 
     public boolean isGateFree(Integer gateId) {
         Gate foundGate = getGate(gateId);

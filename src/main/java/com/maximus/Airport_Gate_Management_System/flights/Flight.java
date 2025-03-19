@@ -14,7 +14,6 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "flights")
 public class Flight {
 
     @Id
@@ -27,8 +26,7 @@ public class Flight {
     @Column(nullable = false)
     private LocalTime arrivingTime;
 
-    @OneToOne
-    @JoinColumn(name = "gate_id")
+    @OneToOne(mappedBy = "flight", optional = true)
     private Gate gate;
 
 }

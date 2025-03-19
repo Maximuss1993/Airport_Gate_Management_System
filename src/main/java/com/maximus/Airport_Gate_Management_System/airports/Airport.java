@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "airports")
 public class Airport {
 
     @Id
@@ -28,7 +27,9 @@ public class Airport {
     @Column(length = 50, nullable = false)
     private String location;
 
-    @OneToMany(mappedBy = "airport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "airport",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Gate> gates;
 
