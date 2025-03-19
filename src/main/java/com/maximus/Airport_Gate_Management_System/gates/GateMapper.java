@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
 import jakarta.validation.Valid;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -14,10 +15,28 @@ public interface GateMapper {
 
     GateMapper INSTANCE = Mappers.getMapper(GateMapper.class);
 
+
+    @BeforeMapping
+    default void checkIfDtoIsNull(GateDto dto) {
+        if (dto == null) {
+            log.error("GateDto object is null. Cannot proceed with mapping.");
+            throw new IllegalArgumentException("DTO cannot be null");
+        }
+    }
+
     @Mapping(source = "name", target = "name")
     @Mapping(source = "openingTime", target = "openingTime")
     @Mapping(source = "closingTime", target = "closingTime")
     Gate toGate(@Valid GateDto dto);
+
+
+    @BeforeMapping
+    default void checkIfGateIsNull(Gate gate) {
+        if (gate == null) {
+            log.error("Gate object is null. Cannot proceed with mapping.");
+            throw new IllegalArgumentException("Gate object cannot be null");
+        }
+    }
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "openingTime", target = "openingTime")

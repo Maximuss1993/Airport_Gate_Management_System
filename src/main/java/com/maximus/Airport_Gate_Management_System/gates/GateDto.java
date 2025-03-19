@@ -8,7 +8,7 @@ import java.time.LocalTime;
 public record GateDto(
 
         @NotEmpty(message = "Name of the gate should not be empty.")
-        @NotEmpty(message = "Name cannot be empty")
+        @NotNull(message = "Name of the gate should not be null.")
         String name,
 
         @NotNull(message = "Opening time for the gate should not be null.")
