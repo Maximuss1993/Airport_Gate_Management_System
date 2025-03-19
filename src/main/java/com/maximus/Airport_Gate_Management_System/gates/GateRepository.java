@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +41,18 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
 
     @Transactional
     default void parkOutFlightFromGate(Integer gateId) {
-        Gate gate = findById(gateId).orElseThrow();
+        Gate gate = findById(gateId).orElseThrow(() ->
+                new EntityNotFoundException("Gate not found, ID: " + gateId)
+        );
         Flight flight = gate.getFlight();
         if (flight == null) {
-            log.warn("Gate ID {} does not have a flight associated.", gateId);
+            log.debug("Gate ID {} does not have a flight associated.", gateId);
             return;
         }
         gate.setFlight(null);
         flight.setGate(null);
         save(gate);
-        log.info("Flight ID {} successfully removed from Gate ID {}",
+        log.trace("Flight ID {} successfully removed from Gate ID {}",
                 flight.getId(), gateId);
     }
 

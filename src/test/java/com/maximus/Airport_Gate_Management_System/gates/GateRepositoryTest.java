@@ -2,6 +2,7 @@ package com.maximus.Airport_Gate_Management_System.gates;
 
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,9 +79,7 @@ class GateRepositoryTest {
                 .build();
 
         gateRepository.save(gate);
-
         Gate foundGate = gateRepository.findById(gate.getId()).get();
-
         assertNotNull(foundGate);
     }
 
@@ -109,7 +108,6 @@ class GateRepositoryTest {
         gateRepository.save(gate3);
 
         var targetTime = LocalTime.of(2, 0);
-
         List<Gate> availableGates = gateRepository
                 .findAllAvailableGates(targetTime);
 
@@ -181,19 +179,23 @@ class GateRepositoryTest {
 
         var gateId = gate.getId();
 
-        Gate savedGate = gateRepository.findById(gateId).orElseThrow();
+        Gate savedGate = gateRepository.findById(gateId).orElseThrow(() ->
+                new EntityNotFoundException("Gate not found, ID:" + gateId));
         assertEquals(savedGate.getFlight(), flight);
 
         gateRepository.parkOutFlightFromGate(gateId);
         gateRepository.flush();
 
-        Gate updatedGate = gateRepository.findById(gateId).orElseThrow();
+        Gate updatedGate = gateRepository.findById(gateId).orElseThrow(() ->
+                new EntityNotFoundException("Gate not found, ID:" + gateId));
 
         assertNull(updatedGate.getFlight(),
                 "Flight should be null after parkOutFlightFromGate");
 
         Flight updatedFlight = flightRepository
-                .findById(flight.getId()).orElseThrow();
+                .findById(flight.getId()).orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Flight not found, ID:" + flight.getId()));
         assertNull(updatedFlight.getGate(),
                 "Flight's gate should be null after parkOut");
     }

@@ -95,7 +95,7 @@ public class GateService {
         Gate gate = getGate(gateId);
         checkGateAvailability(gate);
         parkFlightOnGateAndSave(flightId, gate);
-        log.info("Flight with ID: {} successfully parked at Gate with ID: {}",
+        log.debug("Flight with ID: {} successfully parked at Gate with ID: {}",
                 flightId, gateId);
         return true;
     }
@@ -105,7 +105,7 @@ public class GateService {
         var currentTime = LocalTime.now();
         Gate foundGate = getFirstAvailableGate(currentTime);
         parkFlightOnGateAndSave(flightId, foundGate);
-        log.info("Flight with ID: {} successfully parked at the first available " +
+        log.debug("Flight with ID: {} successfully parked at the first available " +
                 "gate (ID: {}).", flightId, foundGate.getId());
         return true;
     }
@@ -115,7 +115,7 @@ public class GateService {
     public boolean parkOutFlightFromGate(Integer gateId) {
         try {
             gateRepository.parkOutFlightFromGate(gateId);
-            log.info("Successfully parked out the flight from gate ID: {}",
+            log.debug("Successfully parked out the flight from gate ID: {}",
                     gateId);
             return true;
         } catch (Exception e) {
@@ -181,7 +181,7 @@ public class GateService {
         gate.setFlight(flight);
         flightRepository.save(flight);
         gateRepository.save(gate);
-        log.trace("Flight number: {} successfully assigned to gate: {}.",
+        log.debug("Flight number: {} successfully assigned to gate: {}.",
                 flight.getFlightNumber(), gate.getName());
     }
 }
