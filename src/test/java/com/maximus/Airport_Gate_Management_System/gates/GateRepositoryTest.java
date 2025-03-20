@@ -160,7 +160,7 @@ class GateRepositoryTest {
 
     @Test
     @Transactional
-    public void testParkOutFlightFromGate() {
+    public void should_park_out_flight_from_the_gate() {
         Flight flight = Flight.builder()
                 .flightNumber("F#123")
                 .arrivingTime(LocalTime.of(1, 0))

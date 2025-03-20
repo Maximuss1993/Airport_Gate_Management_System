@@ -110,7 +110,6 @@ public class GateService {
         return true;
     }
 
-    //proveri ovo dobro!
     @Transactional
     public boolean parkOutFlightFromGate(Integer gateId) {
         try {
@@ -119,7 +118,7 @@ public class GateService {
                     gateId);
             return true;
         } catch (Exception e) {
-            log.error("Error while parking out flight from gate ID: {}. " +
+            log.debug("Error while parking out flight from gate ID: {}. " +
                     "Error: {}", gateId, e.getMessage());
             return false;
         }
