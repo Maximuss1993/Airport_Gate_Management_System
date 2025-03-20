@@ -181,6 +181,7 @@ class GateRepositoryTest {
 
         Gate savedGate = gateRepository.findById(gateId).orElseThrow(() ->
                 new EntityNotFoundException("Gate not found, ID:" + gateId));
+
         assertEquals(savedGate.getFlight(), flight);
 
         gateRepository.parkOutFlightFromGate(gateId);
@@ -199,6 +200,4 @@ class GateRepositoryTest {
         assertNull(updatedFlight.getGate(),
                 "Flight's gate should be null after parkOut");
     }
-
-
 }

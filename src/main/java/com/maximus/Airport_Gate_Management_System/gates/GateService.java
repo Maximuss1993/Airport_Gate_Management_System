@@ -65,7 +65,6 @@ public class GateService {
     public void deleteById(Integer id) {
         gateRepository.deleteById(id);
     }
-
     @Transactional
     public GateResponseDto updateGate(Integer id, @Valid GateDto dto) {
         Gate gate = getGate(id);
@@ -93,7 +92,7 @@ public class GateService {
     @Transactional
     public boolean parkFlightOnGate(Integer flightId, Integer gateId) {
         Gate gate = getGate(gateId);
-        checkGateAvailability(gate);
+        checkGateAvailabilityTimeAndOccupation(gate);
         parkFlightOnGateAndSave(flightId, gate);
         log.debug("Flight with ID: {} successfully parked at Gate with ID: {}",
                 flightId, gateId);
@@ -124,7 +123,6 @@ public class GateService {
         }
     }
 
-
     public boolean isGateFree(Integer gateId) {
         Gate foundGate = getGate(gateId);
         return (foundGate.getFlight() != null);
@@ -141,7 +139,7 @@ public class GateService {
                 || !localTime.isAfter(closingTime) );
     }
 
-    private void checkGateAvailability(Gate gate) {
+    protected void checkGateAvailabilityTimeAndOccupation(Gate gate) {
         if (gate.getFlight() != null) {
             throw new GateOccupiedException("Gate with ID: "
                     + gate.getId() + " is already occupied!");
@@ -168,13 +166,13 @@ public class GateService {
                         "Flight not found, ID: " + flightId));
     }
 
-    private Gate getGate(Integer gateId) {
+    protected Gate getGate(Integer gateId) {
         return gateRepository.findById(gateId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Gate not found, ID:" + gateId));
     }
 
-    private void parkFlightOnGateAndSave(Integer flightId, Gate gate) {
+    protected void parkFlightOnGateAndSave(Integer flightId, Gate gate) {
         Flight flight = getFlight(flightId);
         flight.setGate(gate);
         gate.setFlight(flight);
