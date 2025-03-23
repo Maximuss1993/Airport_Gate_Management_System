@@ -404,6 +404,45 @@ class GateServiceTest {
         verify(flightRepository).save(flight);
     }
 
+    @Test
+    void should_return_false_when_no_available_gate_to_park_flight() {
+        Integer flightId = 1;
+
+        when(gateRepository.findFirstAvailableGate(any(LocalTime.class),
+                any(Pageable.class))).thenReturn(Page.empty());
+
+        boolean result = gateService.parkFlightOnFirstAvailableGate(flightId);
+
+        assertFalse(result);
+        verify(gateRepository, never()).save(any());
+        verify(flightRepository, never()).save(any());
+    }
+
+    //TODO: check!
+    @Test
+    void should_throw_exception_when_flight_not_found() {
+        // Given
+        Integer flightId = 1;
+        Gate gate = Gate.builder()
+                .id(1)
+                .name("G-1")
+                .openingTime(LocalTime.of(6, 0))
+                .closingTime(LocalTime.of(18, 0))
+                .flight(null) // Gate is free
+                .build();
+
+        // Mock the repository responses
+        when(gateRepository.findFirstAvailableGate(any(LocalTime.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(gate))); // Simulate that we have one available gate
+        when(flightRepository.findById(flightId)).thenReturn(Optional.empty()); // Flight not found
+
+        // When & Then
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> gateService.parkFlightOnFirstAvailableGate(flightId));
+        assertEquals("Flight not found, ID: " + flightId, exception.getMessage());
+    }
+
+
+
 
 
 }

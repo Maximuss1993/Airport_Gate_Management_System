@@ -1,5 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.maximus.Airport_Gate_Management_System.exceptions.FlightNotFoundException;
+import com.maximus.Airport_Gate_Management_System.exceptions.GateNotFoundException;
 import com.maximus.Airport_Gate_Management_System.exceptions.GateOccupiedException;
 import com.maximus.Airport_Gate_Management_System.exceptions.GateUnavailableTimeException;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
@@ -155,20 +157,20 @@ public class GateService {
         Page<Gate> gatePage = gateRepository
                 .findFirstAvailableGate(currentTime, pageable);
         if (!gatePage.hasContent())
-            throw new EntityNotFoundException("No available gates found at " +
+            throw new GateUnavailableTimeException("No available gates found at " +
                     "the current time: " + currentTime);
         return gatePage.getContent().get(0);
     }
 
     private Flight getFlight(Integer flightId) {
         return flightRepository.findById(flightId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new FlightNotFoundException(
                         "Flight not found, ID: " + flightId));
     }
 
     protected Gate getGate(Integer gateId) {
         return gateRepository.findById(gateId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new GateNotFoundException(
                         "Gate not found, ID:" + gateId));
     }
 

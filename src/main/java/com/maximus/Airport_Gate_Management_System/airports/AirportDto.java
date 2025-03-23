@@ -1,16 +1,13 @@
 package com.maximus.Airport_Gate_Management_System.airports;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record AirportDto(
 
-        @NotEmpty(message = "Name of the airport should not be empty.")
-        @NotNull(message = "Name of the airport cannot be null.")
+        @NotBlank(message = "Name of the airport should not be blank.")
         String name,
 
-        @NotEmpty(message = "Location of the airport should not be empty.")
-        @NotNull(message = "Location of the airport cannot be null.")
+        @NotBlank(message = "Location of the airport should not be blank.")
         String location
 
 ) {

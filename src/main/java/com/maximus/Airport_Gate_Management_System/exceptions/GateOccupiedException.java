@@ -1,12 +1,8 @@
 package com.maximus.Airport_Gate_Management_System.exceptions;
 
-public class GateOccupiedException extends ApiRequestBaseException {
+public class GateOccupiedException extends RuntimeException {
 
     public GateOccupiedException(String message) {
         super(message);
-    }
-
-    public GateOccupiedException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
