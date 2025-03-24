@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.flights;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.maximus.Airport_Gate_Management_System.gates.Gate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Flight {
     private String flightNumber;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime arrivingTime;
 
     @OneToOne(mappedBy = "flight", optional = true)

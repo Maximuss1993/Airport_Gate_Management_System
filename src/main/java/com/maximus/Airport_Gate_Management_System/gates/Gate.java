@@ -1,6 +1,7 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.maximus.Airport_Gate_Management_System.airports.Airport;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import jakarta.persistence.*;
@@ -26,9 +27,11 @@ public class Gate {
     private String name;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime openingTime;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime closingTime;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
@@ -39,5 +42,15 @@ public class Gate {
     @JoinColumn(name = "airport_id")
     @JsonBackReference
     private Airport airport;
+
+//    @PrePersist
+//    public void trimTime() {
+//        if (openingTime != null) {
+//            openingTime = openingTime.withSecond(0).withNano(0);
+//        }
+//        if (closingTime != null) {
+//            closingTime = closingTime.withSecond(0).withNano(0);
+//        }
+//    }
 
 }
