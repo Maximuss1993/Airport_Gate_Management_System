@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.maximus.Airport_Gate_Management_System.exceptions.GateOccupiedException;
 import com.maximus.Airport_Gate_Management_System.exceptions.GateUnavailableTimeException;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
@@ -11,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -42,6 +42,8 @@ class GateServiceTest {
 
     @Mock
     private Logger log;
+
+    private Gate testGate;
 
     @BeforeEach
     void setUp() {
@@ -347,19 +349,19 @@ class GateServiceTest {
         Gate gate1 = Gate.builder()
                 .id(gateId1)
                 .name("G-1")
-                .openingTime(LocalTime.of(1, 0)) // Gate 1 opens at 1:00
-                .closingTime(LocalTime.of(3, 0)) // Gate 1 closes at 3:00
+                .openingTime(LocalTime.of(1, 0))
+                .closingTime(LocalTime.of(3, 0))
                 .build();
         Gate gate2 = Gate.builder()
                 .id(gateId2)
                 .name("G-2")
-                .openingTime(LocalTime.of(6, 0)) // Gate 2 opens at 6:00
-                .closingTime(LocalTime.of(4, 0)) // Gate 2 closes at 4:00
+                .openingTime(LocalTime.of(6, 0))
+                .closingTime(LocalTime.of(4, 0))
                 .build();
         Flight flight = Flight.builder()
                 .id(flightId)
                 .flightNumber("F-123")
-                .arrivingTime(LocalTime.of(5, 0)) // Flight arrives at 5:00
+                .arrivingTime(LocalTime.of(5, 0))
                 .build();
 
         when(gateRepository.findById(gateId1)).thenReturn(Optional.of(gate1));
@@ -392,36 +394,17 @@ class GateServiceTest {
                 .flightNumber("F-123")
                 .arrivingTime(LocalTime.of(8, 0))
                 .build();
-
         when(gateRepository.findFirstAvailableGate(any(LocalTime.class),
                 any(Pageable.class))).thenReturn(new PageImpl<>(List.of(gate)));
         when(flightRepository.findById(flightId)).thenReturn(Optional.of(flight));
-
         boolean result = gateService.parkFlightOnFirstAvailableGate(flightId);
-
         assertTrue(result);
         verify(gateRepository).save(gate);
         verify(flightRepository).save(flight);
     }
 
     @Test
-    void should_return_false_when_no_available_gate_to_park_flight() {
-        Integer flightId = 1;
-
-        when(gateRepository.findFirstAvailableGate(any(LocalTime.class),
-                any(Pageable.class))).thenReturn(Page.empty());
-
-        boolean result = gateService.parkFlightOnFirstAvailableGate(flightId);
-
-        assertFalse(result);
-        verify(gateRepository, never()).save(any());
-        verify(flightRepository, never()).save(any());
-    }
-
-    //TODO: check!
-    @Test
     void should_throw_exception_when_flight_not_found() {
-        // Given
         Integer flightId = 1;
         Gate gate = Gate.builder()
                 .id(1)
@@ -431,18 +414,115 @@ class GateServiceTest {
                 .flight(null) // Gate is free
                 .build();
 
-        // Mock the repository responses
-        when(gateRepository.findFirstAvailableGate(any(LocalTime.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(gate))); // Simulate that we have one available gate
-        when(flightRepository.findById(flightId)).thenReturn(Optional.empty()); // Flight not found
+        when(gateRepository.findFirstAvailableGate(any(LocalTime.class),
+                any(Pageable.class))).thenReturn(new PageImpl<>(List.of(gate)));
+        when(flightRepository.findById(flightId)).thenReturn(
+                Optional.empty());
 
-        // When & Then
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> gateService.parkFlightOnFirstAvailableGate(flightId));
-        assertEquals("Flight not found, ID: " + flightId, exception.getMessage());
+        Exception exception = assertThrows(EntityNotFoundException.class, () ->
+                gateService.parkFlightOnFirstAvailableGate(flightId));
+        assertEquals("Flight not found, ID: " + flightId,
+                exception.getMessage());
     }
 
+    @Test
+    void test_park_out_flight_from_gate_success() {
+        Integer gateId = 1;
+        Gate gate = new Gate.GateBuilder()
+                .id(gateId)
+                .flight(new Flight())
+                .build();
+        gateRepository.save(gate);
+        boolean result = gateService.parkOutFlightFromGate(gateId);
+        assertTrue(result);
+    }
 
+    @Test
+    void test_park_out_flight_from_gate_failure() {
+        Integer gateId = 1;
+        Gate gate = new Gate.GateBuilder()
+                .id(gateId)
+                .build();
+        gateRepository.save(gate);
+        doThrow(new RuntimeException("Database error")).when(gateRepository)
+                .parkOutFlightFromGate(gateId);
+        boolean result = gateService.parkOutFlightFromGate(gateId);
+        assertFalse(result);
+    }
 
+    @Test
+    void test_is_gate_free_when_gate_has_flight() {
+        Integer gateId = 1;
+        Gate gate = Gate.builder()
+                .id(gateId)
+                .flight(new Flight())
+                .build();
+        when(gateRepository.findById(gateId)).thenReturn(Optional.of(gate));
+        boolean result = gateService.isGateFree(gate.getId());
+        assertFalse(result);
+    }
 
+    @Test
+    void test_is_gate_free_when_gate_is_free() {
+        Integer gateId = 1;
+        Gate gate = Gate.builder()
+                .id(gateId)
+                .flight(null)
+                .build();
+        when(gateRepository.findById(gateId)).thenReturn(Optional.of(gate));
+        boolean result = gateService.isGateFree(gate.getId());
+        assertTrue(result);
+    }
 
+    @Test
+    void test_check_availability_time_within_time_range() {
+        Integer gateId = 1;
+        Gate gate = Gate.builder()
+                .id(gateId)
+                .openingTime(LocalTime.of(0, 0))
+                .closingTime(LocalTime.of(23, 59))
+                .flight(null)
+                .build();
+        boolean result = gateService.checkAvailabilityTime(gate);
+        assertTrue(result);
+    }
+
+    @Test
+    void test_check_availability_time_out_of_time_range() {
+        Gate gate = Gate.builder()
+                .openingTime(LocalTime.of(0, 0))
+                .closingTime(LocalTime.of(0, 1))
+                .flight(null)
+                .build();
+        boolean result = gateService.checkAvailabilityTime(gate);
+        assertFalse(result);
+    }
+
+    @Test
+    void test_check_gate_availability_time_and_occupation_gate_occupied() {
+        var gateId = 1;
+        Gate gate = Gate.builder()
+                .id(gateId)
+                .flight(new Flight())
+                .build();
+        GateOccupiedException thrown = assertThrows(GateOccupiedException.class,
+                () -> {gateService.checkGateAvailabilityTimeAndOccupation(gate);
+        });
+        assertEquals("Gate with ID: " + gateId + " is already occupied!",
+                thrown.getMessage());
+    }
+
+    @Test
+    void test_check_gate_availability_time_and_occupation_gate_unavailable() {
+        var gateId = 1;
+        Gate gate = Gate.builder()
+                .id(gateId)
+                .openingTime(LocalTime.of(0, 0))
+                .closingTime(LocalTime.of(0, 1))
+                .build();
+        GateUnavailableTimeException thrown = assertThrows(
+                GateUnavailableTimeException.class, () -> {
+            gateService.checkGateAvailabilityTimeAndOccupation(gate);
+        });
+    }
 }

@@ -118,7 +118,7 @@ public class GateService {
             log.debug("Successfully parked out the flight from gate ID: {}",
                     gateId);
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.debug("Error while parking out flight from gate ID: {}. " +
                     "Error: {}", gateId, e.getMessage());
             return false;
@@ -127,10 +127,10 @@ public class GateService {
 
     public boolean isGateFree(Integer gateId) {
         Gate foundGate = getGate(gateId);
-        return (foundGate.getFlight() != null);
+        return (foundGate.getFlight() == null);
     }
 
-    private boolean checkAvailabilityTime(Gate gate) {
+    protected boolean checkAvailabilityTime(Gate gate) {
         var localTime = LocalTime.now();
         var openingTime = gate.getOpeningTime();
         var closingTime = gate.getClosingTime();
@@ -156,7 +156,7 @@ public class GateService {
         Pageable pageable = PageRequest.of(0, 1);
         Page<Gate> gatePage = gateRepository
                 .findFirstAvailableGate(currentTime, pageable);
-        if (!gatePage.hasContent())
+        if (gatePage.isEmpty())
             throw new GateUnavailableTimeException("No available gates found at " +
                     "the current time: " + currentTime);
         return gatePage.getContent().get(0);

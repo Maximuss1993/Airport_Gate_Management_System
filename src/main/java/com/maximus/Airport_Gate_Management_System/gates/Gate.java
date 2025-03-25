@@ -34,7 +34,7 @@ public class Gate {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime closingTime;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
@@ -42,15 +42,5 @@ public class Gate {
     @JoinColumn(name = "airport_id")
     @JsonBackReference
     private Airport airport;
-
-//    @PrePersist
-//    public void trimTime() {
-//        if (openingTime != null) {
-//            openingTime = openingTime.withSecond(0).withNano(0);
-//        }
-//        if (closingTime != null) {
-//            closingTime = closingTime.withSecond(0).withNano(0);
-//        }
-//    }
 
 }
