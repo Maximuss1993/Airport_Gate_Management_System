@@ -19,19 +19,22 @@ public class GlobalExceptionHandler {
             GateUnavailableTimeException.class})
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
 
+        HttpStatus badRequestStatus = HttpStatus.BAD_REQUEST;
+
         log.debug("RuntimeException occurred: {}. Details: {}",
-                ex.getClass().getSimpleName(), ex.getMessage(), ex);
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                ex);
 
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-
-        var apiException = new ApiException(
-                ex.getMessage(), badRequest,
+        ApiException apiException = new ApiException(
+                ex.getMessage(),
+                badRequestStatus,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
 
-        log.trace("Created response for RuntimeException: {}", apiException);
+        log.debug("Created response for RuntimeException: {}", apiException);
 
-        return new ResponseEntity<>(apiException, badRequest);
+        return new ResponseEntity<>(apiException, badRequestStatus);
     }
 
     @ExceptionHandler(value = {
@@ -40,18 +43,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleEntityNotFoundException(
             EntityNotFoundException ex) {
 
+        HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
+
         log.debug("EntityNotFoundException occurred: {}. Details: {}",
-                ex.getClass().getSimpleName(), ex.getMessage(), ex);
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                ex);
 
-        HttpStatus notFound = HttpStatus.NOT_FOUND;
-
-        var apiException = new ApiException(
-                ex.getMessage(), notFound,
+        ApiException apiException = new ApiException(
+                ex.getMessage(),
+                notFoundStatus,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
 
-        log.trace("Created response for EntityNotFoundException: {}", apiException);
+        log.debug("Created response for EntityNotFoundException: {}",
+                apiException);
 
-        return new ResponseEntity<>(apiException, notFound);
+        return new ResponseEntity<>(apiException, notFoundStatus);
     }
 }

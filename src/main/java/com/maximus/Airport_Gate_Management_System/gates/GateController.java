@@ -45,7 +45,8 @@ public class GateController {
     ) {
         if (localTime == null)
             return ResponseEntity.badRequest().build();
-        List<GateResponseDto> availableGates = gateService.getAvailableGates(localTime);
+        List<GateResponseDto> availableGates = gateService
+                .getAvailableGates(localTime);
         if (availableGates == null || availableGates.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(availableGates);

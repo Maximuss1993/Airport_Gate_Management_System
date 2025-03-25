@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 description = "OpenApi documentation for my Spring Boot App " +
                         "- Airport Gate Management System",
-                title = "OpenApi specification - Maximuss1993",
+                title = "OpenApi specification - Marko Popov",
                 version = "1.0"
         ),
         servers = {

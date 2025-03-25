@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
-
     boolean existsByFlightNumber(String flightNumber);
 
 }

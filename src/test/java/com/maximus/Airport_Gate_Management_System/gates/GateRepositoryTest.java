@@ -37,15 +37,12 @@ class GateRepositoryTest {
 
     @Test
     public void should_save_gate_to_repository() {
-
         Gate gate = Gate.builder()
                 .name("TestGate")
                 .openingTime(LocalTime.of(1,0))
                 .closingTime(LocalTime.of(13, 0))
                 .build();
-
         Gate savedGate = gateRepository.save(gate);
-
         assertNotNull(savedGate);
         assertEquals(gate.getName(), savedGate.getName());
         assertEquals(gate.getOpeningTime(), savedGate.getOpeningTime());
@@ -54,9 +51,7 @@ class GateRepositoryTest {
 
     @Test
     public void should_find_all_gates() {
-
-        int NUM_OF_GATES = 20;
-
+        final int NUM_OF_GATES = 20;
         for (int i = 0; i < NUM_OF_GATES; i++) {
             Gate gate = Gate.builder()
                     .name("TestGate #" + i)
@@ -71,13 +66,11 @@ class GateRepositoryTest {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void should_find_gate_by_id() {
-
         Gate gate = Gate.builder()
                 .name("TestGate1")
                 .openingTime(LocalTime.of(1, 0))
                 .closingTime(LocalTime.of(2, 0))
                 .build();
-
         gateRepository.save(gate);
         Gate foundGate = gateRepository.findById(gate.getId()).get();
         assertNotNull(foundGate);
@@ -85,7 +78,6 @@ class GateRepositoryTest {
 
     @Test
     public void should_find_available_gate() {
-
         Gate gate1 = Gate.builder()
                 .name("TestGate1")
                 .openingTime(LocalTime.of(1, 0))
@@ -144,17 +136,14 @@ class GateRepositoryTest {
 
     @Test
     public void should_delete_gate() {
-
         Gate gate = Gate.builder()
                 .name("TestGate1")
                 .openingTime(LocalTime.of(1, 0))
                 .closingTime(LocalTime.of(3, 0))
                 .build();
-
         gateRepository.save(gate);
         gateRepository.deleteById(gate.getId());
         Optional<Gate> returnedGate = gateRepository.findById(gate.getId());
-
         assertTrue(returnedGate.isEmpty());
     }
 
@@ -176,14 +165,12 @@ class GateRepositoryTest {
                 .build();
         gateRepository.save(gate);
         gateRepository.flush();
-
         var gateId = gate.getId();
 
         Gate savedGate = gateRepository.findById(gateId).orElseThrow(() ->
                 new EntityNotFoundException("Gate not found, ID:" + gateId));
 
         assertEquals(savedGate.getFlight(), flight);
-
         gateRepository.parkOutFlightFromGate(gateId);
         gateRepository.flush();
 

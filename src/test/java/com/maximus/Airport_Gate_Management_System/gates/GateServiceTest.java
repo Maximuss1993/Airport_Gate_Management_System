@@ -75,7 +75,6 @@ class GateServiceTest {
                         .closingTime(LocalTime.of(2,0))
                         .build());
         GateResponseDto responseDto = gateService.saveGate(dto);
-
         assertEquals(dto.name(), responseDto.name());
         assertEquals(dto.openingTime(), responseDto.openingTime());
         assertEquals(dto.closingTime(), responseDto.closingTime());
@@ -93,7 +92,6 @@ class GateServiceTest {
         List<Gate> gates = new ArrayList<>();
         gates.add(gate1);
         gates.add(gate2);
-
         when(gateRepository.findAll()).thenReturn(gates);
         when(gateMapper.toGateResponseDto(any(Gate.class)))
                 .thenAnswer(invocation -> {
@@ -105,7 +103,6 @@ class GateServiceTest {
                             .build();
                 });
         List<GateResponseDto> responseDtos = gateService.findAllGates();
-
         assertEquals(gates.size(), responseDtos.size());
         verify(gateRepository, times(1)).findAll();
     }
@@ -143,7 +140,6 @@ class GateServiceTest {
         Integer gateId = 1;
         when(gateRepository.findById(gateId))
                 .thenReturn(Optional.empty());
-
         assertThrows(EntityNotFoundException.class,
                 () -> gateService.findById(gateId));
     }
@@ -320,8 +316,8 @@ class GateServiceTest {
         doNothing().when(gateService).parkFlightOnGateAndSave(flightId, gate);
 
         boolean result = gateService.parkFlightOnGate(flightId, gateId);
-        assertTrue(result);
 
+        assertTrue(result);
         verify(gateService, times(1))
                 .checkGateAvailabilityTimeAndOccupation(gate);
         verify(gateService, times(1))
@@ -332,9 +328,7 @@ class GateServiceTest {
     public void should_throw_exception_when_gate_not_found() {
         Integer flightId = 1001;
         Integer gateId = 1;
-
         when(gateRepository.findById(gateId)).thenReturn(Optional.empty());
-
         assertThrows(EntityNotFoundException.class, () -> {
             gateService.parkFlightOnGate(flightId, gateId);
         });
@@ -413,7 +407,6 @@ class GateServiceTest {
                 .closingTime(LocalTime.of(18, 0))
                 .flight(null) // Gate is free
                 .build();
-
         when(gateRepository.findFirstAvailableGate(any(LocalTime.class),
                 any(Pageable.class))).thenReturn(new PageImpl<>(List.of(gate)));
         when(flightRepository.findById(flightId)).thenReturn(
