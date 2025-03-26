@@ -23,41 +23,33 @@ public class AirportController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public AirportResponseDto saveAirport(
-            @Valid @RequestBody AirportDto dto
-    ) {
+    public AirportResponseDto saveAirport(@Valid @RequestBody AirportDto dto) {
         return airportService.saveAirport(dto);
     }
 
     @GetMapping("/{airport-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public AirportResponseDto findById(
-            @PathVariable("airport-id") int id
-    ) {
+    public AirportResponseDto findById(@PathVariable("airport-id") int id) {
         return airportService.findById(id);
     }
 
     @GetMapping("/search/name/{airport-name}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AirportResponseDto> findAirportByName (
-            @PathVariable("airport-name") String airportName
-    ) {
+            @PathVariable("airport-name") String airportName) {
         return airportService.findByName(airportName);
     }
 
     @GetMapping("/search/location/{airport-location}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AirportResponseDto> findAirportByLocation (
-            @PathVariable("airport-location") String location
-    ) {
+            @PathVariable("airport-location") String location) {
         return airportService.findByLocation(location);
     }
 
     @DeleteMapping("/{airport-id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById(
-            @PathVariable("airport-id") Integer id
-    ) {
+    public void deleteById(@PathVariable("airport-id") Integer id) {
         airportService.deleteById(id);
     }
 }

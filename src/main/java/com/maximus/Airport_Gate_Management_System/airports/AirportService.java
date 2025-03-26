@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class AirportService {
 
     private final AirportRepository airportRepository;
+
     private final AirportMapper airportMapper = AirportMapper.INSTANCE;
 
     public AirportService(
@@ -20,11 +21,9 @@ public class AirportService {
     }
 
     public AirportResponseDto saveAirport(AirportDto dto) {
-
         Airport airport = airportMapper.toAirport(dto);
         Airport savedAirport = airportRepository.save(airport);
         log.trace("Creating new airport with ID: {}.", airport.getId());
-
         return airportMapper.toAirportResponseDto(savedAirport);
     }
 

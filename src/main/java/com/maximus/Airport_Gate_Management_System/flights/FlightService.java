@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class FlightService {
 
     private final FlightRepository flightRepository;
+
     private final FlightMapper flightMapper = FlightMapper.INSTANCE;
 
     public FlightService(

@@ -20,8 +20,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+
 @Slf4j
+@Service
 public class GateService {
 
     private final GateRepository gateRepository;
@@ -67,6 +68,7 @@ public class GateService {
     public void deleteById(Integer id) {
         gateRepository.deleteById(id);
     }
+
     @Transactional
     public GateResponseDto updateGate(Integer id, @Valid GateDto dto) {
         Gate gate = getGate(id);
@@ -106,8 +108,8 @@ public class GateService {
         var currentTime = LocalTime.now();
         Gate foundGate = getFirstAvailableGate(currentTime);
         parkFlightOnGateAndSave(flightId, foundGate);
-        log.debug("Flight with ID: {} successfully parked at the first available " +
-                "gate (ID: {}).", flightId, foundGate.getId());
+        log.debug("Flight with ID: {} successfully parked at the first " +
+                "available gate (ID: {}).", flightId, foundGate.getId());
         return true;
     }
 
@@ -142,14 +144,12 @@ public class GateService {
     }
 
     protected void checkGateAvailabilityTimeAndOccupation(Gate gate) {
-        if (gate.getFlight() != null) {
+        if (gate.getFlight() != null)
             throw new GateOccupiedException("Gate with ID: "
                     + gate.getId() + " is already occupied!");
-        }
-        if (!checkAvailabilityTime(gate)) {
+        if (!checkAvailabilityTime(gate))
             throw new GateUnavailableTimeException("Gate with ID: "
                     + gate.getId() + " is currently unavailable!");
-        }
     }
 
     private Gate getFirstAvailableGate(LocalTime currentTime) {
@@ -157,21 +157,19 @@ public class GateService {
         Page<Gate> gatePage = gateRepository
                 .findFirstAvailableGate(currentTime, pageable);
         if (gatePage.isEmpty())
-            throw new GateUnavailableTimeException("No available gates found at " +
-                    "the current time: " + currentTime);
+            throw new GateUnavailableTimeException("No available gates found " +
+                    "at the current time: " + currentTime);
         return gatePage.getContent().get(0);
     }
 
     private Flight getFlight(Integer flightId) {
-        return flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException(
-                        "Flight not found, ID: " + flightId));
+        return flightRepository.findById(flightId).orElseThrow(() ->
+                new FlightNotFoundException("Flight not found, ID: " + flightId));
     }
 
     protected Gate getGate(Integer gateId) {
-        return gateRepository.findById(gateId)
-                .orElseThrow(() -> new GateNotFoundException(
-                        "Gate not found, ID:" + gateId));
+        return gateRepository.findById(gateId).orElseThrow(() ->
+                new GateNotFoundException("Gate not found, ID:" + gateId));
     }
 
     protected void parkFlightOnGateAndSave(Integer flightId, Gate gate) {

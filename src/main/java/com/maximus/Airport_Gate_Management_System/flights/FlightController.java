@@ -23,25 +23,19 @@ public class FlightController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public FlightResponseDto saveFlight(
-            @Valid @RequestBody FlightDto dto
-    ) {
+    public FlightResponseDto saveFlight(@Valid @RequestBody FlightDto dto) {
         return flightService.saveFlight(dto);
     }
 
     @GetMapping("/{flight-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public FlightResponseDto findById(
-            @PathVariable("flight-id") int id
-    ) {
+    public FlightResponseDto findById(@PathVariable("flight-id") Integer id) {
         return flightService.findById(id);
     }
 
     @DeleteMapping("/{flight-id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById(
-            @PathVariable("flight-id") Integer id
-    ) {
+    public void deleteById(@PathVariable("flight-id") Integer id) {
         flightService.deleteById(id);
     }
 }

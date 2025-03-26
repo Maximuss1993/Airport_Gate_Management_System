@@ -25,10 +25,12 @@ as whether they are currently in use.
 - **Framework**: Spring Boot 3
 - **JVM**: Java 17
 - **Database**: PostgreSQL
+- **ORM framework**: Hibernate 
 - **Protocol**: REST API
 - **Containerization platform**: Docker
 - **Building Docker image tool**: Jib
 - **API tool**: Swagger
+- **Testing frameworks**: JUnit, Mockito
 
 [//]: # (**Authentication**: &#40;if applicable&#41; &#41;)
 [//]: # (JWT, OAuth 2.0, Basic Authentication &#41;)

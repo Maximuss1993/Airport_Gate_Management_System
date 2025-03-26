@@ -41,7 +41,8 @@ public class GateController {
     public ResponseEntity<List<GateResponseDto>> getAvailableGates(
             @Parameter(description = "Set time for checking free gates.")
             @PathVariable("time")
-            @DateTimeFormat(pattern = "HH:mm") LocalTime localTime
+            @DateTimeFormat(pattern = "HH:mm")
+            LocalTime localTime
     ) {
         if (localTime == null)
             return ResponseEntity.badRequest().build();
@@ -56,18 +57,23 @@ public class GateController {
     @PostMapping("/park/flight/{flight-id}/gate/{gate-id}")
     public ResponseEntity<String> parkFlightOnGate(
             @Parameter(description = "Set flight id for parking.")
-            @PathVariable("flight-id") Integer flightId,
+            @PathVariable("flight-id")
+            Integer flightId,
+
             @Parameter(description = "Set available gate id for parking.")
-            @PathVariable("gate-id") Integer gateId) {
+            @PathVariable("gate-id")
+            Integer gateId) {
+
         boolean success = gateService.parkFlightOnGate(flightId, gateId);
+
         if (success) {
-            return ResponseEntity.ok("Flight parked successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Flight parked successfully.");
         } else {
             log.trace("Flight ID: {} is not successfully parked " +
                             "at the gate ID: {}.", flightId, gateId);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Gate is already occupied.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("The gate is not available.");
         }
     }
 
@@ -77,14 +83,14 @@ public class GateController {
             @PathVariable("flight-id") Integer flightId) {
 
         boolean success = gateService.parkFlightOnFirstAvailableGate(flightId);
+
         if (success) {
-            return ResponseEntity.ok("Flight parked successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Flight parked successfully.");
         } else {
             log.trace("Flight ID: {} is not successfully parked because " +
-                            "there is not any available gate.",
-                    flightId);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                            "there is not any available gate.", flightId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("All gates are already occupied.");
         }
     }
@@ -92,8 +98,7 @@ public class GateController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public GateResponseDto saveGate(
-            @Valid @RequestBody GateDto dto
-    ) {
+            @Valid @RequestBody GateDto dto) {
         return gateService.saveGate(dto);
     }
 
@@ -103,29 +108,28 @@ public class GateController {
             @PathVariable("gate-id") Integer gateId) {
 
         if (gateService.isGateFree(gateId)) {
-            return ResponseEntity.ok(
-                    String.format("Gate ID:%d is already free!", gateId));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Gate ID:" + gateId + " is already free!");
         }
         boolean success = gateService.parkOutFlightFromGate(gateId);
         if (success) {
-            return ResponseEntity.ok(
-                    String.format("Flight parked out successfully from gate " +
-                            "ID:%d.", gateId));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Flight parked out successfully from gate ID:"
+                            + gateId + "." );
         } else {
             log.warn("Something went wrong with parking out from gate ID: {}.",
                     gateId);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(String.format("Failed to park out flight from gate " +
-                            "ID:%d. Please try again.", gateId));
+                    .body("Failed to park out flight from gate " +
+                            "ID:" + gateId + ". Please try again.");
         }
     }
 
     @GetMapping("/{gate-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Optional<GateResponseDto> findById(
-            @PathVariable("gate-id") Integer id
-    ) {
+            @PathVariable("gate-id") Integer id) {
         return gateService.findById(id);
     }
 
@@ -147,9 +151,7 @@ public class GateController {
 
     @DeleteMapping("/{gate-id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById(
-            @PathVariable("gate-id") Integer id
-    ) {
+    public void deleteById(@PathVariable("gate-id") Integer id) {
         gateService.deleteById(id);
     }
 }
