@@ -5,11 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -71,12 +69,18 @@ class GateControllerTest {
         when(gateService.findAllGates()).thenReturn(mockGates);
         mockMvc.perform(get("/api/gates"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Gate1"))
-                .andExpect(jsonPath("$[0].openingTime").value("01:00"))
-                .andExpect(jsonPath("$[0].closingTime").value("02:00"))
-                .andExpect(jsonPath("$[1].name").value("Gate2"))
-                .andExpect(jsonPath("$[1].openingTime").value("03:00"))
-                .andExpect(jsonPath("$[1].closingTime").value("04:00"));
+                .andExpect(jsonPath("$[0].name")
+                        .value("Gate1"))
+                .andExpect(jsonPath("$[0].openingTime")
+                        .value("01:00"))
+                .andExpect(jsonPath("$[0].closingTime")
+                        .value("02:00"))
+                .andExpect(jsonPath("$[1].name")
+                        .value("Gate2"))
+                .andExpect(jsonPath("$[1].openingTime")
+                        .value("03:00"))
+                .andExpect(jsonPath("$[1].closingTime")
+                        .value("04:00"));
     }
 
 }
