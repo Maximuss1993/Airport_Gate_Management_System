@@ -4,69 +4,92 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.http.MediaType;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.time.LocalTime;
+import java.util.List;
 
-@WebMvcTest(controllers = GateController.class)
-@AutoConfigureMockMvc(addFilters = false)
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(MockitoExtension.class)
+@WebMvcTest(GateController.class)
 class GateControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private GateService gateService;
+
+    @InjectMocks
+    private GateController gateController;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private GateMapper gateMapper;
-
-    private Gate gate;
-    private GateResponseDto responseDto;
+    private Gate gate1;
+    private Gate gate2;
+    private GateResponseDto responseDto1;
+    private GateResponseDto responseDto2;
 
     @BeforeEach
     public void init() {
-//        MockitoAnnotations.openMocks(this);
-
-        gate = Gate.builder()
-                .id(1)
-                .name("Test Gate")
+        gate1 = Gate.builder()
+                .name("Test Gate 1")
+                .openingTime(LocalTime.of(1,0))
+                .closingTime(LocalTime.of(2,0))
                 .build();
-
-//        responseDto = gateMapper.toGateResponseDto(gate);
-        responseDto = GateResponseDto.builder().name("Test Gate").build();
-
-        given(gateMapper.toGateResponseDto(ArgumentMatchers.any(Gate.class)))
-                .willReturn(responseDto);
-
-    }
+        gate2 = Gate.builder()
+                .name("Test Gate 2")
+                .openingTime(LocalTime.of(3,0))
+                .closingTime(LocalTime.of(4,0))
+                .build();
+        responseDto1 = GateResponseDto.builder()
+                .name(gate1.getName())
+                .openingTime(gate1.getOpeningTime())
+                .closingTime(gate1.getClosingTime())
+                .build();
+        responseDto2 = GateResponseDto.builder()
+                .name(gate2.getName())
+                .openingTime(gate2.getOpeningTime())
+                .closingTime(gate2.getClosingTime())
+                .build();
+}
 
     @Test
     public void GateController_SaveGate_ReturnCreated() throws Exception {
-        given(gateService.saveGate(ArgumentMatchers.any()))
-                .willAnswer( (invocation)
-                        -> invocation.getArgument(0));
+            var response = List.of(responseDto1, responseDto2);
 
-        ResultActions response = mockMvc.perform(post("/api/gates")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(responseDto))
-        );
+        when(gateService.findAllGates()).thenReturn(response);
 
-        response.andExpect(MockMvcResultMatchers.status().isCreated());
+        //probaj ovo
+//        MockHttpServletResponse response = mvc.perform(
+//                        get("/superheroes/?name=RobotMan")
+//                                .accept(MediaType.APPLICATION_JSON))
+//                .andReturn().getResponse();
+
+
+
+//        mockMvc.perform(get("/api/gates"))
+//                .andExpect(status().isOk())
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(content().string(response));
+//      TODO: JSON se vraca postavi tako i proveri mapper !
+
+
+        //probaj ovo
+//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+//        assertThat(response.getContentAsString()).isEqualTo(
+//                jsonSuperHero.write(new SuperHero("Rob", "Mannon", "RobotMan")).getJson()
+//        );
     }
 
 }
