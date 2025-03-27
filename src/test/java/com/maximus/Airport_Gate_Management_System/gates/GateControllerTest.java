@@ -9,15 +9,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.http.MediaType;
 
 import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(GateController.class)
@@ -26,7 +29,7 @@ class GateControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private GateService gateService;
 
     @InjectMocks
@@ -35,61 +38,45 @@ class GateControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Gate gate1;
-    private Gate gate2;
     private GateResponseDto responseDto1;
     private GateResponseDto responseDto2;
+    LocalTime openingTime1 = LocalTime.of(1, 0);
+    LocalTime closingTime1 = LocalTime.of(2, 0);
+    LocalTime openingTime2 = LocalTime.of(3, 0);
+    LocalTime closingTime2 = LocalTime.of(4, 0);
+    String gateName1 = "Gate1";
+    String gateName2 = "Gate2";
+
 
     @BeforeEach
     public void init() {
-        gate1 = Gate.builder()
-                .name("Test Gate 1")
-                .openingTime(LocalTime.of(1,0))
-                .closingTime(LocalTime.of(2,0))
-                .build();
-        gate2 = Gate.builder()
-                .name("Test Gate 2")
-                .openingTime(LocalTime.of(3,0))
-                .closingTime(LocalTime.of(4,0))
-                .build();
+
         responseDto1 = GateResponseDto.builder()
-                .name(gate1.getName())
-                .openingTime(gate1.getOpeningTime())
-                .closingTime(gate1.getClosingTime())
+                .name(gateName1)
+                .openingTime(openingTime1)
+                .closingTime(closingTime1)
+                .flight(null)
                 .build();
         responseDto2 = GateResponseDto.builder()
-                .name(gate2.getName())
-                .openingTime(gate2.getOpeningTime())
-                .closingTime(gate2.getClosingTime())
+                .name(gateName2)
+                .openingTime(openingTime2)
+                .closingTime(closingTime2)
+                .flight(null)
                 .build();
 }
 
     @Test
     public void GateController_SaveGate_ReturnCreated() throws Exception {
-            var response = List.of(responseDto1, responseDto2);
-
-        when(gateService.findAllGates()).thenReturn(response);
-
-        //probaj ovo
-//        MockHttpServletResponse response = mvc.perform(
-//                        get("/superheroes/?name=RobotMan")
-//                                .accept(MediaType.APPLICATION_JSON))
-//                .andReturn().getResponse();
-
-
-
-//        mockMvc.perform(get("/api/gates"))
-//                .andExpect(status().isOk())
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(content().string(response));
-//      TODO: JSON se vraca postavi tako i proveri mapper !
-
-
-        //probaj ovo
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        assertThat(response.getContentAsString()).isEqualTo(
-//                jsonSuperHero.write(new SuperHero("Rob", "Mannon", "RobotMan")).getJson()
-//        );
+        List<GateResponseDto> mockGates = List.of(responseDto1, responseDto2);
+        when(gateService.findAllGates()).thenReturn(mockGates);
+        mockMvc.perform(get("/api/gates"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Gate1"))
+                .andExpect(jsonPath("$[0].openingTime").value("01:00"))
+                .andExpect(jsonPath("$[0].closingTime").value("02:00"))
+                .andExpect(jsonPath("$[1].name").value("Gate2"))
+                .andExpect(jsonPath("$[1].openingTime").value("03:00"))
+                .andExpect(jsonPath("$[1].closingTime").value("04:00"));
     }
 
 }
