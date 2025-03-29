@@ -18,66 +18,66 @@ import java.time.LocalTime;
 @SpringBootApplication
 public class AirportGateManagementSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AirportGateManagementSystemApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(AirportGateManagementSystemApplication.class, args);
+  }
 
-	@Profile("dev")
-	@Bean
-	public CommandLineRunner commandLineRunner(
-			AirportRepository airportRepository,
-			GateRepository gateRepository,
-			FlightRepository flightRepository
-	) {
-		return args -> {
-			final int NUM_OF_GATES = 20;
-			final int NUM_OF_FLIGHTS = 30;
+  @Profile("manual-test")
+  @Bean
+  public CommandLineRunner commandLineRunner(
+      AirportRepository airportRepository,
+      GateRepository gateRepository,
+      FlightRepository flightRepository) {
 
-			Airport airport = Airport.builder()
-					.name("Nikola Tesla")
-					.location("Belgrade")
-					.build();
-			airportRepository.save(airport);
+    return args -> {
+      final int NUM_OF_GATES = 10;
+      final int NUM_OF_FLIGHTS = 10;
 
-			for (int i = 1; i <= NUM_OF_GATES; i++) {
-				Faker faker = new Faker();
+      Airport airport = Airport.builder()
+          .name("Nikola Tesla")
+          .location("Belgrade")
+          .build();
+      airportRepository.save(airport);
 
-				var oHours = faker.number().numberBetween(0, 24);
-				var oMinutes = faker.number().numberBetween(0, 59);
-				LocalTime openingTime = LocalTime.of(oHours, oMinutes);
+      for (int i = 1; i <= NUM_OF_GATES; i++) {
+        Faker faker = new Faker();
 
-				var cHours = faker.number().numberBetween(0, 24);
-				var cMinutes = faker.number().numberBetween(0, 59);
-				LocalTime closingTime = LocalTime.of(cHours, cMinutes);
+        var oHours = faker.number().numberBetween(0, 24);
+        var oMinutes = faker.number().numberBetween(0, 59);
+        LocalTime openingTime = LocalTime.of(oHours, oMinutes);
 
-				Gate gate = Gate.builder()
-						.name("Gate #" + i)
-						.openingTime(openingTime)
-						.closingTime(closingTime)
-						.airport(airport)
-						.build();
-				gateRepository.save(gate);
-			}
+        var cHours = faker.number().numberBetween(0, 24);
+        var cMinutes = faker.number().numberBetween(0, 59);
+        LocalTime closingTime = LocalTime.of(cHours, cMinutes);
 
-			for (int i = 1; i <= NUM_OF_FLIGHTS; i++) {
-				Faker faker = new Faker();
-				var aHours = faker.number().numberBetween(0, 24);
-				var aMinutes = faker.number().numberBetween(0, 59);
-				LocalTime arrivingTime = LocalTime.of(aHours, aMinutes);
+        Gate gate = Gate.builder()
+            .name("Gate #" + i)
+            .openingTime(openingTime)
+            .closingTime(closingTime)
+            .airport(airport)
+            .build();
+        gateRepository.save(gate);
+      }
 
-				var flNumber = "F#" + faker.number().numberBetween(100, 999);
-				while (flightRepository.existsByFlightNumber(flNumber)) {
-					flNumber = "F#" + faker.number().numberBetween(100, 999);
-				}
+      for (int i = 1; i <= NUM_OF_FLIGHTS; i++) {
+        Faker faker = new Faker();
+        var aHours = faker.number().numberBetween(0, 24);
+        var aMinutes = faker.number().numberBetween(0, 59);
+        LocalTime arrivingTime = LocalTime.of(aHours, aMinutes);
 
-				Flight flight = Flight.builder()
-						.flightNumber(flNumber)
-						.arrivingTime(arrivingTime)
-						.build();
-				flightRepository.save(flight);
-			}
-		};
-	}
+        var flNumber = "F#" + faker.number().numberBetween(100, 999);
+        while (flightRepository.existsByFlightNumber(flNumber)) {
+          flNumber = "F#" + faker.number().numberBetween(100, 999);
+        }
+
+        Flight flight = Flight.builder()
+            .flightNumber(flNumber)
+            .arrivingTime(arrivingTime)
+            .build();
+        flightRepository.save(flight);
+      }
+    };
+  }
 }
 
 

@@ -10,32 +10,32 @@ import java.util.List;
 @RequestMapping("/api/flights")
 public class FlightController {
 
-    private final FlightService flightService;
+  private final FlightService flightService;
 
-    public FlightController(FlightService flightService) {
-        this.flightService = flightService;
-    }
+  public FlightController(FlightService flightService) {
+    this.flightService = flightService;
+  }
 
-    @GetMapping()
-    public List<FlightResponseDto> findAllFlights() {
-        return flightService.findAllFlights();
-    }
+  @GetMapping()
+  public List<FlightResponseDto> findAllFlights() {
+    return flightService.findAllFlights();
+  }
 
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public FlightResponseDto saveFlight(@Valid @RequestBody FlightDto dto) {
-        return flightService.saveFlight(dto);
-    }
+  @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
+  public FlightResponseDto saveFlight(@Valid @RequestBody FlightDto dto) {
+    return flightService.saveFlight(dto);
+  }
 
-    @GetMapping("/{flight-id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public FlightResponseDto findById(@PathVariable("flight-id") Integer id) {
-        return flightService.findById(id);
-    }
+  @GetMapping("/{flight-id}")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public FlightResponseDto findById(@PathVariable("flight-id") Integer id) {
+    return flightService.findById(id);
+  }
 
-    @DeleteMapping("/{flight-id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteById(@PathVariable("flight-id") Integer id) {
-        flightService.deleteById(id);
-    }
+  @DeleteMapping("/{flight-id}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteById(@PathVariable("flight-id") Integer id) {
+    flightService.deleteById(id);
+  }
 }

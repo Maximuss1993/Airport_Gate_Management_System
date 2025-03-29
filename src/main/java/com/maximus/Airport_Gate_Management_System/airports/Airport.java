@@ -17,20 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 public class Airport {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
-    @Column(length = 50, nullable = false, unique = true)
-    private String name;
+  @Column(length = 50, nullable = false, unique = true)
+  private String name;
 
-    @Column(length = 50, nullable = false)
-    private String location;
+  @Column(length = 50, nullable = false)
+  private String location;
 
-    @OneToMany(mappedBy = "airport",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Gate> gates;
+  @OneToMany(mappedBy = "airport",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY)
+  @JsonManagedReference
+  private List<Gate> gates;
 
 }

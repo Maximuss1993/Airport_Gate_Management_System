@@ -16,44 +16,44 @@ import java.util.List;
 
 public interface GateRepository extends JpaRepository<Gate, Integer> {
 
-    Logger log = LoggerFactory.getLogger(GateRepository.class);
+  Logger log = LoggerFactory.getLogger(GateRepository.class);
 
-    @Query("select gate from Gate gate where " +
-            "(gate.openingTime <= :localTime " +
-                "and gate.closingTime >= :localTime) " +
-            "or (gate.openingTime > gate.closingTime " +
-                "and (gate.openingTime <= :localTime " +
-                    "or gate.closingTime >= :localTime)) " +
-            "and gate.flight is null")
-    List<Gate> findAllAvailableGates(
-            @Param("localTime") LocalTime localTime);
+  @Query("select gate from Gate gate where " +
+      "(gate.openingTime <= :localTime " +
+      "and gate.closingTime >= :localTime) " +
+      "or (gate.openingTime > gate.closingTime " +
+      "and (gate.openingTime <= :localTime " +
+      "or gate.closingTime >= :localTime)) " +
+      "and gate.flight is null")
+  List<Gate> findAllAvailableGates(
+      @Param("localTime") LocalTime localTime);
 
-    @Query("select gate from Gate gate where " +
-            "(gate.openingTime <= :localTime " +
-                "and gate.closingTime >= :localTime) " +
-            "or (gate.openingTime > gate.closingTime " +
-                "and (gate.openingTime <= :localTime " +
-            "       or gate.closingTime >= :localTime)) " +
-            "and gate.flight is null")
-    Page<Gate> findFirstAvailableGate(
-            @Param("localTime") LocalTime localTime,
-            Pageable pageable);
+  @Query("select gate from Gate gate where " +
+      "(gate.openingTime <= :localTime " +
+      "and gate.closingTime >= :localTime) " +
+      "or (gate.openingTime > gate.closingTime " +
+      "and (gate.openingTime <= :localTime " +
+      "       or gate.closingTime >= :localTime)) " +
+      "and gate.flight is null")
+  Page<Gate> findFirstAvailableGate(
+      @Param("localTime") LocalTime localTime,
+      Pageable pageable);
 
-    @Transactional
-    default void parkOutFlightFromGate(Integer gateId) {
-        Gate gate = findById(gateId).orElseThrow(() ->
-                new EntityNotFoundException("Gate not found, ID: " + gateId)
-        );
-        Flight flight = gate.getFlight();
-        if (flight == null) {
-            log.debug("Gate ID {} does not have a flight associated.", gateId);
-            return;
-        }
-        gate.setFlight(null);
-        flight.setGate(null);
-        save(gate);
-        log.trace("Flight ID {} successfully removed from Gate ID {}",
-                flight.getId(), gateId);
+  @Transactional
+  default void parkOutFlightFromGate(Integer gateId) {
+    Gate gate = findById(gateId).orElseThrow(() ->
+        new EntityNotFoundException("Gate not found, ID: " + gateId)
+    );
+    Flight flight = gate.getFlight();
+    if (flight == null) {
+      log.debug("Gate ID {} does not have a flight associated.", gateId);
+      return;
     }
+    gate.setFlight(null);
+    flight.setGate(null);
+    save(gate);
+    log.trace("Flight ID {} successfully removed from Gate ID {}",
+        flight.getId(), gateId);
+  }
 
 }

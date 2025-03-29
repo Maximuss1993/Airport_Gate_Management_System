@@ -9,15 +9,15 @@ import java.time.LocalTime;
 @Builder
 public record GateResponseDto(
 
-        String name,
+    String name,
 
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime openingTime,
+    @JsonFormat(pattern = "HH:mm")
+    LocalTime openingTime,
 
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime closingTime,
+    @JsonFormat(pattern = "HH:mm")
+    LocalTime closingTime,
 
-        Flight flight
+    Flight flight
 
 ) {
 }

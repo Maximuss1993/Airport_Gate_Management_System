@@ -8,10 +8,10 @@ import java.time.LocalTime;
 @Builder
 public record FlightResponseDto(
 
-        String flightNumber,
+    String flightNumber,
 
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime arrivingTime
+    @JsonFormat(pattern = "HH:mm")
+    LocalTime arrivingTime
 
 ) {
 }

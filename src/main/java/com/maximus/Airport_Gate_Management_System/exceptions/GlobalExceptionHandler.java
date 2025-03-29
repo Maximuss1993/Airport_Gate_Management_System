@@ -14,51 +14,51 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = {
-            GateOccupiedException.class,
-            GateUnavailableTimeException.class})
-    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+  @ExceptionHandler(value = {
+      GateOccupiedException.class,
+      GateUnavailableTimeException.class})
+  public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
 
-        HttpStatus badRequestStatus = HttpStatus.BAD_REQUEST;
+    HttpStatus badRequestStatus = HttpStatus.BAD_REQUEST;
 
-        log.debug("RuntimeException occurred: {}. Details: {}",
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                ex);
+    log.debug("RuntimeException occurred: {}. Details: {}",
+        ex.getClass().getSimpleName(),
+        ex.getMessage(),
+        ex);
 
-        ApiException apiException = new ApiException(
-                ex.getMessage(),
-                badRequestStatus,
-                ZonedDateTime.now(ZoneId.of("Z"))
-        );
+    ApiException apiException = new ApiException(
+        ex.getMessage(),
+        badRequestStatus,
+        ZonedDateTime.now(ZoneId.of("Z"))
+    );
 
-        log.debug("Created response for RuntimeException: {}", apiException);
+    log.debug("Created response for RuntimeException: {}", apiException);
 
-        return new ResponseEntity<>(apiException, badRequestStatus);
-    }
+    return new ResponseEntity<>(apiException, badRequestStatus);
+  }
 
-    @ExceptionHandler(value = {
-            GateNotFoundException.class,
-            FlightNotFoundException.class})
-    public ResponseEntity<Object> handleEntityNotFoundException(
-            EntityNotFoundException ex) {
+  @ExceptionHandler(value = {
+      GateNotFoundException.class,
+      FlightNotFoundException.class})
+  public ResponseEntity<Object> handleEntityNotFoundException(
+      EntityNotFoundException ex) {
 
-        HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
+    HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
 
-        log.debug("EntityNotFoundException occurred: {}. Details: {}",
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                ex);
+    log.debug("EntityNotFoundException occurred: {}. Details: {}",
+        ex.getClass().getSimpleName(),
+        ex.getMessage(),
+        ex);
 
-        ApiException apiException = new ApiException(
-                ex.getMessage(),
-                notFoundStatus,
-                ZonedDateTime.now(ZoneId.of("Z"))
-        );
+    ApiException apiException = new ApiException(
+        ex.getMessage(),
+        notFoundStatus,
+        ZonedDateTime.now(ZoneId.of("Z"))
+    );
 
-        log.debug("Created response for EntityNotFoundException: {}",
-                apiException);
+    log.debug("Created response for EntityNotFoundException: {}",
+        apiException);
 
-        return new ResponseEntity<>(apiException, notFoundStatus);
-    }
+    return new ResponseEntity<>(apiException, notFoundStatus);
+  }
 }

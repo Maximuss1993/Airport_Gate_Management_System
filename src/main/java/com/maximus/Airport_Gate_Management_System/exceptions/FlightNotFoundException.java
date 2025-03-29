@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 public class FlightNotFoundException extends EntityNotFoundException {
 
-    public FlightNotFoundException(String message) {
-        super(message);
-    }
+  public FlightNotFoundException(String message) {
+    super(message);
+  }
 }

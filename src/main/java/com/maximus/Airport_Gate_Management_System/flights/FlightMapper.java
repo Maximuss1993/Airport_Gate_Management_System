@@ -8,10 +8,10 @@ import org.mapstruct.factory.Mappers;
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface FlightMapper {
 
-    FlightMapper INSTANCE = Mappers.getMapper(FlightMapper.class);
+  FlightMapper INSTANCE = Mappers.getMapper(FlightMapper.class);
 
-    Flight toFlight(FlightDto dto);
+  Flight toFlight(FlightDto dto);
 
-    FlightResponseDto toFlightResponseDto(Flight airport);
+  FlightResponseDto toFlightResponseDto(Flight airport);
 
 }

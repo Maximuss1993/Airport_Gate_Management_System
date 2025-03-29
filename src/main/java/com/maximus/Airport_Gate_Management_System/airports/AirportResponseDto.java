@@ -5,9 +5,9 @@ import lombok.Builder;
 @Builder
 public record AirportResponseDto(
 
-        String name,
+    String name,
 
-        String location
+    String location
 
 ) {
 }

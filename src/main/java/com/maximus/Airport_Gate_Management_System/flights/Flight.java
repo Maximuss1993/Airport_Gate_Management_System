@@ -17,18 +17,18 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class Flight {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
-    @Column(length = 50, nullable = false, unique = true)
-    private String flightNumber;
+  @Column(length = 50, nullable = false, unique = true)
+  private String flightNumber;
 
-    @Column(nullable = false)
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime arrivingTime;
+  @Column(nullable = false)
+  @JsonFormat(pattern = "HH:mm")
+  private LocalTime arrivingTime;
 
-    @OneToOne(mappedBy = "flight", optional = true)
-    private Gate gate;
+  @OneToOne(mappedBy = "flight", optional = true)
+  private Gate gate;
 
 }

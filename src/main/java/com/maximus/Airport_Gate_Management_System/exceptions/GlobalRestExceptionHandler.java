@@ -13,26 +13,26 @@ import java.time.ZonedDateTime;
 @RestControllerAdvice
 public class GlobalRestExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRestRuntimeException(RuntimeException ex) {
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<Object> handleRestRuntimeException(RuntimeException ex) {
 
-        log.debug("RuntimeException in RestController occurred: {}. Details: {}",
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                ex);
+    log.debug("RuntimeException in RestController occurred: {}. Details: {}",
+        ex.getClass().getSimpleName(),
+        ex.getMessage(),
+        ex);
 
-        HttpStatus serverErrorStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    HttpStatus serverErrorStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
-        var apiException = new ApiException(
-                ex.getMessage(),
-                serverErrorStatus,
-                ZonedDateTime.now(ZoneId.of("Z"))
-        );
+    var apiException = new ApiException(
+        ex.getMessage(),
+        serverErrorStatus,
+        ZonedDateTime.now(ZoneId.of("Z"))
+    );
 
-        log.debug("Created response for RuntimeException occurred in " +
-                        "RestController: {}", apiException);
+    log.debug("Created response for RuntimeException occurred in " +
+        "RestController: {}", apiException);
 
-        return new ResponseEntity<>(apiException, serverErrorStatus);
-    }
+    return new ResponseEntity<>(apiException, serverErrorStatus);
+  }
 
 }

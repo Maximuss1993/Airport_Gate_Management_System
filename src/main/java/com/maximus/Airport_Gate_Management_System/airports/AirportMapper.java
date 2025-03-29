@@ -7,10 +7,10 @@ import org.mapstruct.factory.Mappers;
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface AirportMapper {
 
-    AirportMapper INSTANCE = Mappers.getMapper(AirportMapper.class);
+  AirportMapper INSTANCE = Mappers.getMapper(AirportMapper.class);
 
-    Airport toAirport(AirportDto dto);
+  Airport toAirport(AirportDto dto);
 
-    AirportResponseDto toAirportResponseDto(Airport airport);
+  AirportResponseDto toAirportResponseDto(Airport airport);
 
 }

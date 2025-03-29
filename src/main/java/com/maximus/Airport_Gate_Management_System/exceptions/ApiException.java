@@ -6,9 +6,9 @@ import java.time.ZonedDateTime;
 
 public record ApiException(
 
-        String message,
+    String message,
 
-        HttpStatus httpStatus,
+    HttpStatus httpStatus,
 
-        ZonedDateTime timestamp) {
+    ZonedDateTime timestamp) {
 }
