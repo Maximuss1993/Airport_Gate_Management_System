@@ -109,7 +109,6 @@ class GateRepositoryTest {
 
     @Test
     public void should_find_first_available_gate() {
-
         Gate gate1 = Gate.builder()
                 .name("TestGate1")
                 .openingTime(LocalTime.of(1, 0))

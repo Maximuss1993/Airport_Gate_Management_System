@@ -40,11 +40,6 @@ class GateServiceTest {
     @Mock
     private GateMapper gateMapper;
 
-    @Mock
-    private Logger log;
-
-    private Gate testGate;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -268,11 +263,11 @@ class GateServiceTest {
         when(gateRepository.findById(id)).thenReturn(Optional.of(gate));
         when(gateRepository.save(gate)).thenReturn(gate);
 
-        Gate result = gateService.patchGate(id, dto);
+        GateResponseDto result = gateService.patchGate(id, dto);
 
-        assertEquals("UpdatedTestGate", result.getName());
-        assertEquals(LocalTime.of(3, 0), result.getOpeningTime());
-        assertEquals(LocalTime.of(4, 0), result.getClosingTime());
+        assertEquals("UpdatedTestGate", result.name());
+        assertEquals(LocalTime.of(3, 0), result.openingTime());
+        assertEquals(LocalTime.of(4, 0), result.closingTime());
         verify(gateRepository, times(1)).save(gate);
     }
 
@@ -291,11 +286,11 @@ class GateServiceTest {
         when(gateRepository.findById(id)).thenReturn(Optional.of(gate));
         when(gateRepository.save(gate)).thenReturn(gate);
 
-        Gate result = gateService.patchGate(id, dto);
+        GateResponseDto result = gateService.patchGate(id, dto);
 
-        assertEquals("TestGate", result.getName());
-        assertEquals(LocalTime.of(1, 0), result.getOpeningTime());
-        assertEquals(LocalTime.of(2, 0), result.getClosingTime());
+        assertEquals("TestGate", result.name());
+        assertEquals(LocalTime.of(1, 0), result.openingTime());
+        assertEquals(LocalTime.of(2, 0), result.closingTime());
         verify(gateRepository, times(1)).save(gate);
     }
 

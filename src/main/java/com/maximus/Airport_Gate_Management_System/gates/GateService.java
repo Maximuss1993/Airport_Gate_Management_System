@@ -78,7 +78,7 @@ public class GateService {
     }
 
     @Transactional
-    public Gate patchGate(Integer id, GateDto dto) {
+    public GateResponseDto patchGate(Integer id, GateDto dto) {
         if (dto == null) {
             log.error("GateDto is null for patch operation.");
             throw new IllegalArgumentException("GateDto cannot be null");
@@ -88,9 +88,11 @@ public class GateService {
             gate.setName(dto.name());
         if (dto.openingTime() != null)
             gate.setOpeningTime(dto.openingTime());
-        if (dto.closingTime() != null)
+        if (dto.closingTime() != null) {
             gate.setClosingTime(dto.closingTime());
-        return gateRepository.save(gate);
+        }
+        gateRepository.save(gate);
+        return gateMapper.toGateResponseDto(gate);
     }
 
     @Transactional

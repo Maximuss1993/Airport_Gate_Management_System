@@ -37,6 +37,7 @@ public class GateController {
         return ResponseEntity.ok(availableGates);
     }
 
+    @Operation(summary = "Find available gates at specific time.")
     @GetMapping("/available/{time}")
     public ResponseEntity<List<GateResponseDto>> getAvailableGates(
             @Parameter(description = "Set time for checking free gates.")
@@ -65,10 +66,10 @@ public class GateController {
             Integer gateId) {
 
         boolean success = gateService.parkFlightOnGate(flightId, gateId);
-
         if (success) {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Flight parked successfully.");
+                    .body("Flight ID:" + flightId + " successfully parked on " +
+                            "gate ID: " + gateId + ".");
         } else {
             log.trace("Flight ID: {} is not successfully parked " +
                             "at the gate ID: {}.", flightId, gateId);
@@ -83,7 +84,6 @@ public class GateController {
             @PathVariable("flight-id") Integer flightId) {
 
         boolean success = gateService.parkFlightOnFirstAvailableGate(flightId);
-
         if (success) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Flight parked successfully.");
@@ -114,7 +114,7 @@ public class GateController {
         boolean success = gateService.parkOutFlightFromGate(gateId);
         if (success) {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Flight parked out successfully from gate ID:"
+                    .body("Flight parked out successfully from gate ID: "
                             + gateId + "." );
         } else {
             log.warn("Something went wrong with parking out from gate ID: {}.",
@@ -122,35 +122,40 @@ public class GateController {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Failed to park out flight from gate " +
-                            "ID:" + gateId + ". Please try again.");
+                            "ID: " + gateId + ". Please try again.");
         }
     }
 
     @GetMapping("/{gate-id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public Optional<GateResponseDto> findById(
+    public ResponseEntity<GateResponseDto> findById(
             @PathVariable("gate-id") Integer id) {
-        return gateService.findById(id);
+
+        Optional<GateResponseDto> gateResponse = gateService.findById(id);
+        if (gateResponse.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(gateResponse.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public GateResponseDto updateGate(
-            @PathVariable("id") Integer id,
-            @Valid @RequestBody GateDto gateDto) {
-        return gateService.updateGate(id, gateDto);
+    public ResponseEntity<GateResponseDto> updateGate(
+            @PathVariable Integer id,
+            @RequestBody GateDto gateDto) {
+        GateResponseDto updatedGate = gateService.updateGate(id, gateDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedGate);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Gate> patchGate(
+    public ResponseEntity<GateResponseDto> patchGate(
             @PathVariable Integer id,
             @RequestBody GateDto gateDto) {
-        Gate patchedGate = gateService.patchGate(id, gateDto);
-        return ResponseEntity.ok(patchedGate);
+        GateResponseDto patchedGateResponseDto = gateService.patchGate(id, gateDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(patchedGateResponseDto);
     }
 
     @DeleteMapping("/{gate-id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteById(@PathVariable("gate-id") Integer id) {
         gateService.deleteById(id);
     }
