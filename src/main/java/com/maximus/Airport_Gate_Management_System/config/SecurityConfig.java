@@ -1,6 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.config;
 
-import com.maximus.Airport_Gate_Management_System.security.authentication.JwtAuthenticationFilter;
+import com.maximus.Airport_Gate_Management_System.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

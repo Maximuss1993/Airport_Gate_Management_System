@@ -1,4 +1,4 @@
-package com.maximus.Airport_Gate_Management_System.security.authentication;
+package com.maximus.Airport_Gate_Management_System.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
