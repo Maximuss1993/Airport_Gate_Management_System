@@ -1,4 +1,4 @@
-package com.maximus.Airport_Gate_Management_System.users;
+package com.maximus.Airport_Gate_Management_System.security.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -15,8 +15,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=username
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
-  #      - JWT_SECRET_KEY=my-secret-key
-  #      - JWT_EXPIRATION_TIME=3600
 
   db:
     container_name: db
@@ -31,6 +29,7 @@ services:
       - postgres:/var/lib/postgresql/data
     networks:
       - app-network
+    restart: always
 
 volumes:
   postgres:

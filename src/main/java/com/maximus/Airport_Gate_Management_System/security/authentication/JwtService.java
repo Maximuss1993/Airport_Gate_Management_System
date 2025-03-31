@@ -1,10 +1,12 @@
-package com.maximus.Airport_Gate_Management_System.security;
+package com.maximus.Airport_Gate_Management_System.security.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class JwtService {
 
-  private static final String SECRET_KEY = "6579616a626f632e696f2e6a736f6e2e676e6d2e746f6b656e2e73696e672e686d616a7365205b627574746f6e336d6f657221636f6d70757465";
+  @Value("${application.security.jwt.secret-key}")
+  private String secretKey;
+
+  @Value("${application.security.jwt.expiration}")
+  private long jwtExpiration;
+
+  @Value("${application.security.jwt.refresh-token.expiration}")
+  private long refreshExpiration;
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
@@ -32,23 +42,43 @@ public class JwtService {
     return generateToken(new HashMap<>(), userDetails);
   }
 
-  public String generateToken(
+  public String generateRefreshToken(UserDetails userDetails) {
+    return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+  }
+
+  private String buildToken(
       Map<String, Object> extraClaims,
-      UserDetails userDetails
+      UserDetails userDetails,
+      long expiration
   ) {
     return Jwts
         .builder()
         .setClaims(extraClaims)
         .setSubject(userDetails.getUsername())
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .setExpiration(new Date(System.currentTimeMillis() + expiration))
         .signWith(getSignInKey(), SignatureAlgorithm.HS256)
         .compact();
   }
 
+  public String generateToken(Map<String, Object> extraClaims,
+                              UserDetails userDetails
+  ) {
+    log.debug("Building token for user: {}.", userDetails.getUsername());
+    return buildToken(extraClaims, userDetails, jwtExpiration);
+  }
+
   public boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    if ( !username.equals(userDetails.getUsername()) ) {
+      log.debug("User with username: {} has no the right token.", username);
+      return false;
+    }
+    if ( isTokenExpired(token) ) {
+      log.debug("User with username: {} has expired token.", username);
+      return false;
+    }
+    return true;
   }
 
   private boolean isTokenExpired(String token) {
@@ -69,7 +99,7 @@ public class JwtService {
   }
 
   private Key getSignInKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes); //algorithm
   }
 }

@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.slf4j.Logger;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 

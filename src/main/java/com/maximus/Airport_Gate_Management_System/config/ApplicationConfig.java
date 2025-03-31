@@ -1,9 +1,11 @@
 package com.maximus.Airport_Gate_Management_System.config;
 
-import com.maximus.Airport_Gate_Management_System.users.UserRepository;
+import com.maximus.Airport_Gate_Management_System.security.auditing.ApplicationAuditAware;
+import com.maximus.Airport_Gate_Management_System.security.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,4 +45,10 @@ public class ApplicationConfig {
       AuthenticationConfiguration configuration) throws Exception {
     return configuration.getAuthenticationManager();
   }
+
+  @Bean
+  public AuditorAware<Integer> auditorAware() {
+    return new ApplicationAuditAware();
+  }
+
 }

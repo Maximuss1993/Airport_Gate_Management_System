@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/gates")
+@RequestMapping("/api/v1/gates")
 public class GateController {
 
   private final GateService gateService;

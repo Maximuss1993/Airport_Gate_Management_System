@@ -7,32 +7,62 @@ import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
 import com.maximus.Airport_Gate_Management_System.gates.Gate;
 import com.maximus.Airport_Gate_Management_System.gates.GateRepository;
+import com.maximus.Airport_Gate_Management_System.security.authentication.AuthenticationService;
+import com.maximus.Airport_Gate_Management_System.security.authentication.RegisterRequest;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalTime;
 
+import static com.maximus.Airport_Gate_Management_System.security.users.Role.ADMIN;
+import static com.maximus.Airport_Gate_Management_System.security.users.Role.MANAGER;
+
 @SpringBootApplication
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AirportGateManagementSystemApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(AirportGateManagementSystemApplication.class, args);
   }
 
-  @Profile("manual-test")
+  @Profile("dev")
   @Bean
   public CommandLineRunner commandLineRunner(
       AirportRepository airportRepository,
       GateRepository gateRepository,
-      FlightRepository flightRepository) {
+      FlightRepository flightRepository,
+      AuthenticationService service
+  ) {
 
     return args -> {
+
       final int NUM_OF_GATES = 10;
       final int NUM_OF_FLIGHTS = 10;
 
+      var admin = RegisterRequest.builder()
+          .firstName("Admin")
+          .lastName("Admin")
+          .email("admin@mail.com")
+          .password("password")
+          .role(ADMIN)
+          .build();
+      System.out.println("Admin token: "
+          + service.register(admin).getAccessToken());
+
+      var manager = RegisterRequest.builder()
+          .firstName("Manager")
+          .lastName("Manager")
+          .email("manager@mail.com")
+          .password("password")
+          .role(MANAGER)
+          .build();
+
+      System.out.println("Manager token: "
+          + service.register(manager).getAccessToken());
       Airport airport = Airport.builder()
           .name("Nikola Tesla")
           .location("Belgrade")
