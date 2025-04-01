@@ -2,11 +2,13 @@ package com.maximus.Airport_Gate_Management_System.gates;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
@@ -14,8 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "Gates")
 @Slf4j
 @RequestMapping("/api/v1/gates")
+@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 public class GateController {
 
   private final GateService gateService;
@@ -24,12 +28,14 @@ public class GateController {
     this.gateService = gateService;
   }
 
+  @PreAuthorize("hasAuthority('manager:read')")
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
   public List<GateResponseDto> findAllGates() {
     return gateService.findAllGates();
   }
 
+  @PreAuthorize("hasAuthority('manager:read')")
   @GetMapping("/available")
   public ResponseEntity<List<GateResponseDto>> getAvailableGates() {
     List<GateResponseDto> availableGates = gateService
@@ -37,6 +43,7 @@ public class GateController {
     return ResponseEntity.ok(availableGates);
   }
 
+  @PreAuthorize("hasAuthority('manager:read')")
   @Operation(summary = "Find available gates at specific time.")
   @GetMapping("/available/{time}")
   public ResponseEntity<List<GateResponseDto>> getAvailableGates(
@@ -54,6 +61,7 @@ public class GateController {
     return ResponseEntity.ok(availableGates);
   }
 
+  @PreAuthorize("hasAuthority('manager:create')")
   @Operation(summary = "Parking flight on specific gate with provided ID.")
   @PostMapping("/park/flight/{flight-id}/gate/{gate-id}")
   public ResponseEntity<String> parkFlightOnGate(
@@ -67,9 +75,8 @@ public class GateController {
 
     boolean success = gateService.parkFlightOnGate(flightId, gateId);
     if (success) {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body("Flight ID:" + flightId + " successfully parked on " +
-              "gate ID: " + gateId + ".");
+      return ResponseEntity.ok("Flight ID:" + flightId
+          + " successfully parked on " + "gate ID: " + gateId + ".");
     } else {
       log.trace("Flight ID: {} is not successfully parked " +
           "at the gate ID: {}.", flightId, gateId);
@@ -78,6 +85,7 @@ public class GateController {
     }
   }
 
+  @PreAuthorize("hasAuthority('manager:create')")
   @Operation(summary = "Parking flight on first available gate.")
   @PostMapping("/park/flight/{flight-id}")
   public ResponseEntity<String> parkFlightOnFirstAvailableGate(
@@ -85,8 +93,7 @@ public class GateController {
 
     boolean success = gateService.parkFlightOnFirstAvailableGate(flightId);
     if (success) {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body("Flight parked successfully.");
+      return ResponseEntity.ok("Flight parked successfully.");
     } else {
       log.trace("Flight ID: {} is not successfully parked because " +
           "there is not any available gate.", flightId);
@@ -95,6 +102,7 @@ public class GateController {
     }
   }
 
+  @PreAuthorize("hasAuthority('manager:create')")
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)
   public GateResponseDto saveGate(
@@ -102,20 +110,19 @@ public class GateController {
     return gateService.saveGate(dto);
   }
 
+  @PreAuthorize("hasAuthority('manager:create')")
   @Operation(summary = "Parking out flight from the gate.")
   @PostMapping("/park/out/gate/{gate-id}")
   public ResponseEntity<String> parkOutFlightFromGate(
       @PathVariable("gate-id") Integer gateId) {
 
     if (gateService.isGateFree(gateId)) {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body("Gate ID:" + gateId + " is already free!");
+      return ResponseEntity.ok("Gate ID:" + gateId + " is already free!");
     }
     boolean success = gateService.parkOutFlightFromGate(gateId);
     if (success) {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body("Flight parked out successfully from gate ID: "
-              + gateId + ".");
+      return ResponseEntity.ok("Flight parked out successfully from " +
+          "gate ID: " + gateId + ".");
     } else {
       log.warn("Something went wrong with parking out from gate ID: {}.",
           gateId);
@@ -126,6 +133,7 @@ public class GateController {
     }
   }
 
+  @PreAuthorize("hasAuthority('manager:read')")
   @GetMapping("/{gate-id}")
   public ResponseEntity<GateResponseDto> findById(
       @PathVariable("gate-id") Integer id) {
@@ -138,6 +146,7 @@ public class GateController {
     }
   }
 
+  @PreAuthorize("hasAuthority('manager:update')")
   @PutMapping("/{id}")
   public ResponseEntity<GateResponseDto> updateGate(
       @PathVariable Integer id,
@@ -146,6 +155,7 @@ public class GateController {
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedGate);
   }
 
+  @PreAuthorize("hasAuthority('admin:update')")
   @PatchMapping("/{id}")
   public ResponseEntity<GateResponseDto> patchGate(
       @PathVariable Integer id,
@@ -154,6 +164,7 @@ public class GateController {
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(patchedGateResponseDto);
   }
 
+  @PreAuthorize("hasAuthority('manager:delete')")
   @DeleteMapping("/{gate-id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void deleteById(@PathVariable("gate-id") Integer id) {

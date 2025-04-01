@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.security.users;
 
+import com.maximus.Airport_Gate_Management_System.security.roles.Role;
 import com.maximus.Airport_Gate_Management_System.security.tokens.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

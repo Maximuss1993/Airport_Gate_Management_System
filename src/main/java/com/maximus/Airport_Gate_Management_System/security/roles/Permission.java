@@ -1,4 +1,4 @@
-package com.maximus.Airport_Gate_Management_System.security.users;
+package com.maximus.Airport_Gate_Management_System.security.roles;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

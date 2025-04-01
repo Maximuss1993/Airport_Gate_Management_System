@@ -14,9 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.maximus.Airport_Gate_Management_System.security.users.Permission.*;
-import static com.maximus.Airport_Gate_Management_System.security.users.Role.ADMIN;
-import static com.maximus.Airport_Gate_Management_System.security.users.Role.MANAGER;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Permission.*;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Role.ADMIN;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Role.MANAGER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 

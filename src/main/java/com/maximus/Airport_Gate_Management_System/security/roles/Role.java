@@ -1,4 +1,4 @@
-package com.maximus.Airport_Gate_Management_System.security.users;
+package com.maximus.Airport_Gate_Management_System.security.roles;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.maximus.Airport_Gate_Management_System.security.users.Permission.*;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
-
-  //TODO check permissions for all
 
   USER(Collections.emptySet()),
   ADMIN(

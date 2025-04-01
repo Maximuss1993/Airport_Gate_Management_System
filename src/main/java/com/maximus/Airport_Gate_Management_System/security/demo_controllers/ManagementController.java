@@ -1,4 +1,4 @@
-package com.maximus.Airport_Gate_Management_System.demo;
+package com.maximus.Airport_Gate_Management_System.security.demo_controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

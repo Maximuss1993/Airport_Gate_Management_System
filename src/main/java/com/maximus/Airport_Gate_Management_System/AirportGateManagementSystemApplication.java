@@ -18,8 +18,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalTime;
 
-import static com.maximus.Airport_Gate_Management_System.security.users.Role.ADMIN;
-import static com.maximus.Airport_Gate_Management_System.security.users.Role.MANAGER;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Role.ADMIN;
+import static com.maximus.Airport_Gate_Management_System.security.roles.Role.MANAGER;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
