@@ -25,8 +25,9 @@
 
 ## Technical Information
 
-- **Framework**: Spring Boot 3
 - **JVM**: Java 17
+- **Project Build Tool**: Apache Maven
+- **Framework**: Spring Boot 3
 - **Database**: PostgreSQL
 - **ORM framework**: Hibernate
 - **Protocol**: REST API
