@@ -30,14 +30,11 @@
 - **Database**: PostgreSQL
 - **ORM framework**: Hibernate
 - **Protocol**: REST API
+- **Authentication**: JWT
 - **Containerization platform**: Docker
 - **Building Docker image tool**: Jib
 - **API tool**: Swagger
 - **Testing frameworks**: JUnit, Mockito
-
-[//]: # (**Authentication**: &#40;if applicable&#41; &#41;)
-
-[//]: # (JWT, OAuth 2.0, Basic Authentication &#41;)
 
 ## Features
 
