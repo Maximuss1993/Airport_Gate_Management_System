@@ -73,6 +73,35 @@ gates, designed to streamline operations and improve airport resource management
 - Closer to microservice-style organization.
 ---
 
+## 🗄️ Database ER Diagram
+
+```mermaid
+erDiagram
+    FLIGHT {
+        int id PK
+        string flight_number
+        datetime arrival_time
+        datetime departure_time
+    }
+
+    GATE {
+        int id PK
+        string gate_code
+        bool is_available
+        datetime available_from
+        datetime available_to
+    }
+
+    FLIGHT_GATE {
+        int id PK
+        int flight_id FK
+        int gate_id FK
+        datetime assigned_time
+    }
+
+    FLIGHT ||--o{ FLIGHT_GATE : assigned_to
+    GATE ||--o{ FLIGHT_GATE : assigned_to
+```
 
 ## ⚙️ Installation and Setup
 
