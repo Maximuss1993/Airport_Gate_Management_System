@@ -167,6 +167,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>com.maximus.Airport_Gate_Management_System.AirportGateManagementSystemApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -175,6 +176,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+
             <!-- Jib Plugin Configuration -->
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
@@ -194,6 +196,7 @@
                     </container>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 </project>

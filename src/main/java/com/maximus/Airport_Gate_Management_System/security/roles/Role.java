@@ -13,8 +13,6 @@ import static com.maximus.Airport_Gate_Management_System.security.roles.Permissi
 
 @RequiredArgsConstructor
 public enum Role {
-
-  USER(Collections.emptySet()),
   ADMIN(
       Set.of(
           ADMIN_READ,
@@ -24,7 +22,9 @@ public enum Role {
           MANAGER_READ,
           MANAGER_UPDATE,
           MANAGER_DELETE,
-          MANAGER_CREATE
+          MANAGER_CREATE,
+          USER_READ,
+          USER_UPDATE
       )
   ),
   MANAGER(
@@ -32,9 +32,18 @@ public enum Role {
           MANAGER_READ,
           MANAGER_UPDATE,
           MANAGER_DELETE,
-          MANAGER_CREATE
+          MANAGER_CREATE,
+          USER_READ,
+          USER_UPDATE
       )
-  );
+  ),
+  USER(
+      Set.of(
+          USER_READ,
+          USER_UPDATE
+      )
+  ),
+  ;
 
   @Getter
   private final Set<Permission> permissions;

@@ -28,14 +28,14 @@ public class GateController {
     this.gateService = gateService;
   }
 
-  @PreAuthorize("hasAuthority('manager:read')")
+  @PreAuthorize("hasAuthority('manager:read') or hasAuthority('user:read')")
   @GetMapping()
   @ResponseStatus(HttpStatus.OK)
   public List<GateResponseDto> findAllGates() {
     return gateService.findAllGates();
   }
 
-  @PreAuthorize("hasAuthority('manager:read')")
+  @PreAuthorize("hasAuthority('manager:read') or hasAuthority('user:read')")
   @GetMapping("/available")
   public ResponseEntity<List<GateResponseDto>> getAvailableGates() {
     List<GateResponseDto> availableGates = gateService
@@ -43,7 +43,7 @@ public class GateController {
     return ResponseEntity.ok(availableGates);
   }
 
-  @PreAuthorize("hasAuthority('manager:read')")
+  @PreAuthorize("hasAuthority('manager:read') or hasAuthority('user:read')")
   @Operation(summary = "Find available gates at specific time.")
   @GetMapping("/available/{time}")
   public ResponseEntity<List<GateResponseDto>> getAvailableGates(
@@ -61,7 +61,7 @@ public class GateController {
     return ResponseEntity.ok(availableGates);
   }
 
-  @PreAuthorize("hasAuthority('manager:create')")
+  @PreAuthorize("hasAuthority('manager:update') or hasAuthority('user:update')")
   @Operation(summary = "Parking flight on specific gate with provided ID.")
   @PostMapping("/park/flight/{flight-id}/gate/{gate-id}")
   public ResponseEntity<String> parkFlightOnGate(
@@ -85,7 +85,7 @@ public class GateController {
     }
   }
 
-  @PreAuthorize("hasAuthority('manager:create')")
+  @PreAuthorize("hasAuthority('manager:update') or hasAuthority('user:update')")
   @Operation(summary = "Parking flight on first available gate.")
   @PostMapping("/park/flight/{flight-id}")
   public ResponseEntity<String> parkFlightOnFirstAvailableGate(
@@ -110,7 +110,7 @@ public class GateController {
     return gateService.saveGate(dto);
   }
 
-  @PreAuthorize("hasAuthority('manager:create')")
+  @PreAuthorize("hasAuthority('manager:update') or hasAuthority('user:update')")
   @Operation(summary = "Parking out flight from the gate.")
   @PostMapping("/park/out/gate/{gate-id}")
   public ResponseEntity<String> parkOutFlightFromGate(
@@ -133,20 +133,18 @@ public class GateController {
     }
   }
 
-  @PreAuthorize("hasAuthority('manager:read')")
+  @PreAuthorize("hasAuthority('manager:read') or hasAuthority('user:read')")
   @GetMapping("/{gate-id}")
   public ResponseEntity<GateResponseDto> findById(
       @PathVariable("gate-id") Integer id) {
 
     Optional<GateResponseDto> gateResponse = gateService.findById(id);
-    if (gateResponse.isPresent()) {
-      return ResponseEntity.status(HttpStatus.ACCEPTED).body(gateResponse.get());
-    } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+    return gateResponse
+        .map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response))
+        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 
-  @PreAuthorize("hasAuthority('manager:update')")
+  @PreAuthorize("hasAuthority('manager:update') or hasAuthority('user:update')")
   @PutMapping("/{id}")
   public ResponseEntity<GateResponseDto> updateGate(
       @PathVariable Integer id,

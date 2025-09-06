@@ -1,5 +1,6 @@
 package com.maximus.Airport_Gate_Management_System.gates;
 
+import com.maximus.Airport_Gate_Management_System.TestAuditorConfig;
 import com.maximus.Airport_Gate_Management_System.flights.Flight;
 import com.maximus.Airport_Gate_Management_System.flights.FlightRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -22,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@Import(TestAuditorConfig.class)
+@ActiveProfiles("test")
 class GateRepositoryTest {
 
   @Autowired

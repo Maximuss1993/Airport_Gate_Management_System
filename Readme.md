@@ -171,6 +171,35 @@ classDiagram
     Airport --> Gate
 ```
 
+## 🔒 Security
+This application uses Spring Security with JWT (JSON Web Token) authentication 
+and role-based access control. 
+
+The main roles are:
+
+ADMIN – has full access to all resources, including creating, updating, 
+deleting gates, and managing managers.
+
+MANAGER – can manage gates (create, read, update, delete) and park flights, 
+but cannot modify admin-level resources.
+---
+### Authentication Flow
+
+1. The user registers or logs in using the authentication endpoints.
+2. Spring Security generates a JWT token for authenticated users.
+3. Every request to a protected endpoint must include the JWT token in the 
+Authorization header:
+>  Authorization: Bearer <JWT_TOKEN>
+4. The token is validated by a Spring Security filter which checks the user’s 
+role and permissions.
+---
+### Roles & Permissions
+| Role    | Permissions                                                      |
+|---------|------------------------------------------------------------------|
+| ADMIN   | admin:update, admin:delete, manager:read, manager:create, manager:update, manager:delete |
+| MANAGER | manager:read, manager:create, manager:update, manager:delete     |
+| USER    | user:read, user:update                                            |
+
 ## ⚙️ Installation and Setup
 
 ### ✅ Prerequisites

@@ -3,6 +3,7 @@ package com.maximus.Airport_Gate_Management_System.exceptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -33,6 +34,23 @@ public class GlobalRestExceptionHandler {
         "RestController: {}", apiException);
 
     return new ResponseEntity<>(apiException, serverErrorStatus);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+
+    log.debug("AccessDeniedException occurred: {}. Details: {}",
+        ex.getClass().getSimpleName(),
+        ex.getMessage(),
+        ex);
+
+    var apiException = new ApiException(
+        "Access Denied",
+        HttpStatus.FORBIDDEN,
+        ZonedDateTime.now(ZoneId.of("Z"))
+    );
+
+    return new ResponseEntity<>(apiException, HttpStatus.FORBIDDEN);
   }
 
 }
