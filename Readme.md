@@ -74,7 +74,6 @@ gates, designed to streamline operations and improve airport resource management
 ---
 
 ## 🗄️ Database ER Diagram
-
 ```mermaid
 erDiagram
     FLIGHT {
@@ -101,6 +100,47 @@ erDiagram
 
     FLIGHT ||--o{ FLIGHT_GATE : assigned_to
     GATE ||--o{ FLIGHT_GATE : assigned_to
+```
+
+## 🔄 Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant User
+    participant REST_API
+    participant Database
+
+    User->>REST_API: Send flight number
+    REST_API->>Database: Check available gates
+    Database->>REST_API: Return available gates
+    REST_API->>Database: Assign gate to flight
+    Database->>REST_API: Confirm assignment
+    REST_API->>User: Return assigned gate
+```
+
+## 📦 Package Diagram
+```mermaid
+classDiagram
+class Controller {
++assignGate()
++getGateStatus()
+}
+class Service {
++checkAvailability()
++assignGate()
+}
+class Repository {
++findAvailableGates()
++saveAssignment()
+}
+class Entity {
++flightNumber
++gateCode
++assignedTime
+}
+
+    Controller --> Service
+    Service --> Repository
+    Repository --> Entity
 ```
 
 ## ⚙️ Installation and Setup
