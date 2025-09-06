@@ -1,4 +1,6 @@
 # **Airport Gate Management System**
+A Java Spring Boot application for efficient scheduling and allocation of airport 
+gates, designed to streamline operations and improve airport resource management.
 
 > **Description of the task:**
 >
@@ -23,97 +25,89 @@
     well
     as whether they are currently in use.
 
-## Technical Information
 
-- **JVM**: Java 17
-- **Project Build Tool**: Apache Maven
-- **Framework**: Spring Boot 3
-- **Database**: PostgreSQL
-- **ORM framework**: Hibernate
-- **Protocol**: REST API
-- **Authentication**: JWT
-- **Containerization platform**: Docker
-- **Building Docker image tool**: Jib
-- **API tool**: Swagger
-- **Testing frameworks**: JUnit, Mockito
+## 🚀 Tech Stack
 
-## Features
+![Java](https://img.shields.io/badge/Java-17-blue?logo=openjdk&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-Apache-red?logo=apachemaven&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3-green?logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-336791?logo=postgresql&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-ORM-brown?logo=hibernate&logoColor=white)
+![REST API](https://img.shields.io/badge/REST-API-orange?logo=fastapi&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-yellow?logo=jsonwebtokens&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker&logoColor=white)
+![Jib](https://img.shields.io/badge/Docker-Jib-lightblue?logo=googlecloud&logoColor=white)
+![Swagger](https://img.shields.io/badge/API-Docs-brightgreen?logo=swagger&logoColor=white)
+![JUnit](https://img.shields.io/badge/Tests-JUnit25-brightgreen?logo=java&logoColor=white)
+![Mockito](https://img.shields.io/badge/Tests-Mockito-orange?logo=java&logoColor=white)
+---
 
-- Three models are implemented in the application:
+## ✨ Features
+- Manage and assign airport gates
+- Register and track flights
+- Automatic availability check
+- REST API for integration
+- Authentication & Authorization with JWT
+- API documentation with Swagger
+- Unit & integration tests (JUnit, Mockito)
+- Dockerized for easy deployment
+---
 
-1. Airport,
-2. Flight and
-3. Gate.
+## 📂 Project Structure
+- **Controller Layer** – handles REST endpoints
+- **Service Layer** – business logic
+- **Repository Layer** – database access with Spring Data JPA
+- **Entity Layer** – Hibernate ORM mappings
+---
 
-> For all entities you can CREATE, UPDATE, DELETE or SEARCH by different
-> parameters.
+## 📦 Package by Feature
+- In this project structure, packages contain all classes required for a feature.
+- This eliminates cross-package dependencies and keeps classes within a package closely related.
+- As a result, packages have **high cohesion**, **low coupling**, and **higher modularity**.
 
-> The main function for accepting a flight number and returning the assigned
-> gate is in the **GateController** class.
+### Advantages of Package by Feature:
+- High cohesion, low coupling, and modularity.
+- Better encapsulation (more classes can be package-private).
+- Reduced navigation across packages.
+- Scales better than package-by-layer as the application grows.
+- Closer to microservice-style organization.
+---
 
-## Package by Feature
 
-- In this project structure, packages contain all classes that are required
-  for a feature.
-- The use of a class by a class in another package is eliminated with this
-  structure. Also, the classes within the packages are closely related to each
-  other. Thus, there is high cohesion within packages and low coupling between
-  packages. In addition, this structure provides higher modularity.
+## ⚙️ Installation and Setup
 
-> Advantages of Package by Feature:
-> - Package by Feature has packages with high cohesion, low
-    coupling and high modularity.
-> - Package by Feature allows some classes to set their access modifier
-    package-private instead of public, so it increases encapsulation. On the
-    other
-    hand, Package by Layer forces you to set nearly all classes public.
-> - Package by Feature reduces the need to navigate between packages since all
-    classes needed for a feature are in the same package.
-> - Package by Feature is like microservice architecture. Each package is
-    limited to classes related to a particular feature. On the other hand,
-    Package
-    By Layer is monolithic. As an application grows in size, the number of
-    classes
-    in each package will increase without bound.
-*****
-
-## Installation and Setup
-
-### Prerequisites
-
-Before setting up the application, ensure you have the following installed:
-
+### ✅ Prerequisites
+Make sure you have installed:
 - Maven
 - Docker
 - Docker Compose
+---
 
-### Cloning the Repository
+### 🌀 Clone the Repository
+```bash
+git clone https://github.com/Maximuss1993/Airport_Gate_Management_System.git
+cd Airport_Gate_Management_System
+``` 
 
-First, clone the repository from GitHub:
-> `git clone https://github.com/Maximuss1993/Airport_Gate_Management_System.git`
+### 🛠️ Build the Application (with Jib)
+```bash
+mvn compile jib:dockerBuild
+``` 
 
-Maven command for building app in local with Jib:
-> `mvn compile jib:dockerBuild`
+### 🚀 Run with Docker Compose
+```bash
+docker compose up
+``` 
 
-Command for running composed docker image in local (on Docker Daemon):
-> `docker-compose up`
+### 📖 API Documentation
 
-The **Swagger UI** page will then be available at
+Swagger UI: http://localhost:8181/swagger-ui/index.html
 
-- http://server:port/context-path/swagger-ui.html
+OpenAPI JSON: http://localhost:8181/v3/api-docs
 
-and the OpenAPI description will be available at the following
 
-- url for json format: http://server:port/context-path/v3/api-docs
-
-> - server: The server name or IP
-> - port: The server port
-> - context-path: The context path of the application
-
-You can change port in the application.properties file.
-
-Default port in this application is 8181:
-> `http://localhost:8181/swagger-ui/index.html`
-
-On the end you can use the fallowing command to delete all docker images:
-> `docker-compose down`
+### 🧹 Cleanup
+Stop and remove containers, networks, and volumes:
+```bash
+docker compose down
+```
