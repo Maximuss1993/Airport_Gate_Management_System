@@ -76,71 +76,99 @@ gates, designed to streamline operations and improve airport resource management
 ## 🗄️ Database ER Diagram
 ```mermaid
 erDiagram
-    FLIGHT {
+    AIRPORT {
         int id PK
-        string flight_number
-        datetime arrival_time
-        datetime departure_time
+        string name
+        string location
     }
 
     GATE {
         int id PK
-        string gate_code
-        bool is_available
-        datetime available_from
-        datetime available_to
+        string name
+        time opening_time
+        time closing_time
     }
 
-    FLIGHT_GATE {
+    FLIGHT {
         int id PK
-        int flight_id FK
-        int gate_id FK
-        datetime assigned_time
+        string flight_number
+        time arriving_time
     }
 
-    FLIGHT ||--o{ FLIGHT_GATE : assigned_to
-    GATE ||--o{ FLIGHT_GATE : assigned_to
+    GATE ||--o| FLIGHT : assigned_to
+    AIRPORT ||--o{ GATE : has
+
 ```
 
 ## 🔄 Sequence Diagram
 ```mermaid
 sequenceDiagram
     participant User
-    participant REST_API
-    participant Database
+    participant GateController
+    participant GateService
+    participant GateRepository
+    participant FlightRepository
+    participant AirportRepository
 
-    User->>REST_API: Send flight number
-    REST_API->>Database: Check available gates
-    Database->>REST_API: Return available gates
-    REST_API->>Database: Assign gate to flight
-    Database->>REST_API: Confirm assignment
-    REST_API->>User: Return assigned gate
+    User->>GateController: Request available gate for flight
+    GateController->>GateService: checkAvailability(flight)
+    GateService->>GateRepository: find gates by opening/closing time
+    GateRepository-->>GateService: available gates
+    GateService->>FlightRepository: assign gate to flight
+    FlightRepository-->>GateService: confirm assignment
+    GateService-->>GateController: assigned gate
+    GateController-->>User: return assigned gate info
 ```
 
 ## 📦 Package Diagram
 ```mermaid
 classDiagram
-class Controller {
-+assignGate()
-+getGateStatus()
-}
-class Service {
-+checkAvailability()
-+assignGate()
-}
-class Repository {
-+findAvailableGates()
-+saveAssignment()
-}
-class Entity {
-+flightNumber
-+gateCode
-+assignedTime
-}
+    class Controller {
+        +assignGate()
+        +getGateStatus()
+    }
+
+    class Service {
+        +checkAvailability()
+        +assignGate()
+    }
+
+    class Repository {
+        +findAvailableGates()
+        +saveAssignment()
+    }
+
+    class Gate {
+        +Integer id
+        +String name
+        +LocalTime openingTime
+        +LocalTime closingTime
+        +Flight flight
+        +Airport airport
+    }
+
+    class Flight {
+        +Integer id
+        +String flightNumber
+        +LocalTime arrivingTime
+        +Gate gate
+    }
+
+    class Airport {
+        +Integer id
+        +String name
+        +String location
+        +List~Gate~ gates
+    }
 
     Controller --> Service
     Service --> Repository
-    Repository --> Entity
+    Repository --> Gate
+    Repository --> Flight
+    Repository --> Airport
+    Gate --> Flight
+    Gate --> Airport
+    Airport --> Gate
 ```
 
 ## ⚙️ Installation and Setup
